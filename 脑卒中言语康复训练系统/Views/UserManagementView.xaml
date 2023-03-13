@@ -1,0 +1,165 @@
+﻿<UserControl
+    x:Class="脑卒中言语康复训练系统.Views.UserManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:脑卒中言语康复训练系统.Common.converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:脑卒中言语康复训练系统.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    d:DesignHeight="1020"
+    d:DesignWidth="1920"
+    FontFamily="微软雅黑"
+    FontSize="15"
+    mc:Ignorable="d">
+
+    <Grid Margin="5">
+        <Grid.Resources>
+            <!--  转换器  -->
+            <converter:GenderConverter x:Key="GenderConverter" />
+            <converter:DateToYearMonthDayConverter x:Key="DateToYearMonthDayConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="22" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="15,0,0,0" Orientation="Horizontal">
+            <TextBlock
+                Margin="10,0"
+                VerticalAlignment="Center"
+                Text="用户信息:" />
+            <TextBox
+                Width="250"
+                VerticalAlignment="Center"
+                md:HintAssist.Hint="查找用户"
+                md:TextFieldAssist.HasClearButton="True" />
+            <TextBlock
+                Margin="10,0"
+                VerticalAlignment="Center"
+                Text="所属科室:" />
+            <ComboBox SelectedIndex="0">
+                <ComboBoxItem>全部</ComboBoxItem>
+                <ComboBoxItem>康复科</ComboBoxItem>
+                <ComboBoxItem>治疗科</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <Button
+            Margin="30,5"
+            HorizontalAlignment="Right"
+            Command="{Binding AddCommand}"
+            Content="+ 新增用户" />
+        <DataGrid
+            Grid.Row="1"
+            Margin="30,0"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            ColumnWidth="auto"
+            IsReadOnly="True"
+            ItemsSource="{Binding UserManagements}"
+            SelectionMode="Extended"
+            SelectionUnit="Cell">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="2*"
+                    Binding="{Binding Id}"
+                    Header="序号">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Name}"
+                    Header="用户姓名">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Order}"
+                    Header="用户编号">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Birth, Converter={StaticResource DateToYearMonthDayConverter}}"
+                    Header="出生日期">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Gender, Converter={StaticResource GenderConverter}}"
+                    Header="性别">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="4*"
+                    Binding="{Binding Department}"
+                    Header="所属科室">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Phone}"
+                    Header="联系方式">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Width="5*" Header="操作">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <Button
+                                    Margin="4,0"
+                                    Background="#409EFF"
+                                    BorderBrush="#409EFF"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                    ToolTip="编辑">
+                                    <materialDesign:PackIcon Kind="Pencil" />
+                                </Button>
+                                <Button
+                                    Margin="4,0"
+                                    Background="#F56C6C"
+                                    BorderBrush="#F56C6C"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                    ToolTip="删除">
+                                    <materialDesign:PackIcon Kind="WindowClose" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+
+</UserControl>

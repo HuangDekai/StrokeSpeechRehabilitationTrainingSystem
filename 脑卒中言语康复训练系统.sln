@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "脑卒中言语康复训练系统", "脑卒中言语康复训练系统\脑卒中言语康复训练系统.csproj", "{1D6842B4-6A87-4CCE-90AE-A060FF1587FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "脑卒中言语康复训练系统.Shard", "脑卒中言语康复训练系统.Shard\脑卒中言语康复训练系统.Shard.csproj", "{30A6D620-9C4A-494D-9FEC-77AE6529E0BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D6842B4-6A87-4CCE-90AE-A060FF1587FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D6842B4-6A87-4CCE-90AE-A060FF1587FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D6842B4-6A87-4CCE-90AE-A060FF1587FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D6842B4-6A87-4CCE-90AE-A060FF1587FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30A6D620-9C4A-494D-9FEC-77AE6529E0BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30A6D620-9C4A-494D-9FEC-77AE6529E0BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30A6D620-9C4A-494D-9FEC-77AE6529E0BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30A6D620-9C4A-494D-9FEC-77AE6529E0BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC16D5B4-0640-40ED-8D46-070D90B82447}
+	EndGlobalSection
+EndGlobal
