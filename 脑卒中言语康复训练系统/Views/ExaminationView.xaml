@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     d:DesignHeight="1020"
-    d:DesignWidth="1920"
+    d:DesignWidth="1820"
     FontFamily="微软雅黑"
     FontSize="15"
     mc:Ignorable="d">

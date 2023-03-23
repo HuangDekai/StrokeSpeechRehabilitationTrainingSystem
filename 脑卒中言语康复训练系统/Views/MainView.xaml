@@ -16,6 +16,7 @@
     AllowsTransparency="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="微软雅黑"
+    ResizeMode="NoResize"
     TextElement.FontSize="13"
     TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -33,7 +34,7 @@
 
         <materialDesign:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="220">
+                <DockPanel MinWidth="250" Margin="2,0,0,0">
                     <StackPanel Margin="0,20" DockPanel.Dock="Top">
                         <Image
                             Width="50"

@@ -8,7 +8,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="1020"
-    d:DesignWidth="1920"
+    d:DesignWidth="1820"
     FontFamily="微软雅黑"
     FontSize="15"
     mc:Ignorable="d">
@@ -315,6 +315,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -325,6 +326,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -335,6 +337,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -345,6 +348,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -355,33 +359,19 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Width="5*" Header="操作">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                        <Button
-                                            Margin="4,0"
-                                            Background="#409EFF"
-                                            BorderBrush="#409EFF"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                            ToolTip="编辑">
-                                            <materialDesign:PackIcon Kind="Pencil" />
-                                        </Button>
-                                        <Button
-                                            Margin="4,0"
-                                            Background="#F56C6C"
-                                            BorderBrush="#F56C6C"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                            ToolTip="删除">
-                                            <materialDesign:PackIcon Kind="WindowClose" />
-                                        </Button>
-                                    </StackPanel>
+                                    <Button
+                                        VerticalAlignment="Top"
+                                        Content="详情"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource MaterialDesignFlatLightButton}"
+                                        ToolTip="查看用户全部训练记录" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -424,6 +414,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -434,6 +425,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -444,6 +436,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -454,6 +447,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -464,6 +458,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -474,31 +469,19 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Width="4*" Header="操作">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                        <Button
-                                            Margin="4,0"
-                                            Background="#409EFF"
-                                            BorderBrush="#409EFF"
-                                            Content="{materialDesign:PackIcon Kind=Pencil}"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                            ToolTip="编辑" />
-                                        <Button
-                                            Margin="4,0"
-                                            Background="#F56C6C"
-                                            BorderBrush="#F56C6C"
-                                            Content="{materialDesign:PackIcon Kind=WindowClose}"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                            ToolTip="删除" />
-                                    </StackPanel>
+                                    <Button
+                                        VerticalAlignment="Top"
+                                        Content="详情"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource MaterialDesignFlatLightButton}"
+                                        ToolTip="查看用户全部训练记录" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
