@@ -62,7 +62,8 @@
                 <Button
                     Margin="10,5"
                     HorizontalAlignment="Right"
-                    Command="{Binding AddCommand}"
+                    Command="{Binding UserLoginCommand}"
+                    CommandParameter="用户登录"
                     Content="登录" />
             </DockPanel>
 

@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
 {
     internal class UserViewModel : BindableBase
     {
-        public UserViewModel() 
+        public UserViewModel(IDialogService dialogService) 
         {
             userInfo = new UserInfo()
             {
@@ -25,8 +27,16 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 Situation = "中度失语，无听理解障碍和语义理解障碍，存在找词困难和命名障碍，存在语句杂乱症状",
             };
             CreateTestData();
+            UserLoginCommand = new DelegateCommand<string>(UserLogin);
+            this.dialogService = dialogService;
         }
 
+        private void UserLogin(string obj)
+        {
+            dialogService.ShowDialog("UserLoginView");
+        }
+
+        #region 属性
         /// <summary>
         /// 用于用户信息展示
         /// </summary>
@@ -51,12 +61,17 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// 用于训练记录展示
         /// </summary>
         private ObservableCollection<TrainRecord> trainRecordCollection;
+        
+        private readonly IDialogService dialogService;
+
         public ObservableCollection<TrainRecord> TrainRecordCollection
         {
             get { return trainRecordCollection; }
             set { trainRecordCollection = value; RaisePropertyChanged(); }
         }
+        #endregion
 
+        public DelegateCommand<string> UserLoginCommand { get; private set; }
 
         void CreateTestData()
         {

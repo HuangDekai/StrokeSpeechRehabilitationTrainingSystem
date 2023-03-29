@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.ViewModels;
+using 脑卒中言语康复训练系统.ViewModels.Dialogs;
 using 脑卒中言语康复训练系统.Views;
+using 脑卒中言语康复训练系统.Views.Dialogs;
 
 namespace 脑卒中言语康复训练系统
 {
@@ -39,6 +41,8 @@ namespace 脑卒中言语康复训练系统
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterDialog<UserLoginView, UserLoginViewModel>();
+
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
             containerRegistry.RegisterForNavigation<UserManagementView, UserManagementViewModel>();
