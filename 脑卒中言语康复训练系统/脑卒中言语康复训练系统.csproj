@@ -18,10 +18,17 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="RestSharp" Version="106.12.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\脑卒中言语康复训练系统.Shard\脑卒中言语康复训练系统.Shard.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>bin\Debug\net5.0-windows\System.Data.SQLite.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

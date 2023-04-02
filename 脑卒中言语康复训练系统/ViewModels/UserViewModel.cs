@@ -4,12 +4,14 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
@@ -18,14 +20,25 @@ namespace 脑卒中言语康复训练系统.ViewModels
     {
         public UserViewModel(IDialogHostService dialogService) 
         {
+            string name = AppDomain.CurrentDomain.BaseDirectory;
+            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+            string sql = "select * from UserInfo where Id = 1";
+            var reader = sqlHelper.ExecuteQuery(sql);
+            reader.Read();
+
             userInfo = new UserInfo()
             {
-                Id = 1, 
-                Order = "test00001020",
-                Avatar= "../Image/Default.png",
-                Name = "测试", Gender = 1, Birth = new DateTime(1998, 10, 20), Phone = "18775712345", Department = "康复治疗科第一科室",
-                Address = "上海市徐汇区翻斗大街翻斗花园二号楼1001室",
-                Situation = "中度失语，无听理解障碍和语义理解障碍，存在找词困难和命名障碍，存在语句杂乱症状",
+                Id = reader.GetInt32(reader.GetOrdinal("Id")), 
+                Order = reader.GetString(reader.GetOrdinal("Order")),
+                Avatar= reader.GetString(reader.GetOrdinal("Avatar")),
+                Name = reader.GetString(reader.GetOrdinal("Name")), 
+                Gender = reader.GetInt16(reader.GetOrdinal("Gender")), 
+                Birth = reader.GetDateTime(reader.GetOrdinal("Birth")), 
+                Phone = reader.GetString(reader.GetOrdinal("Phone")), 
+                Department = reader.GetString(reader.GetOrdinal("Department")),
+                Address = reader.GetString(reader.GetOrdinal("Address")),
+                Situation = reader.GetString(reader.GetOrdinal("Situation")),
             };
             CreateTestData();
             UserLoginCommand = new DelegateCommand<string>(UserLogin);
@@ -38,6 +51,8 @@ namespace 脑卒中言语康复训练系统.ViewModels
         }
 
         #region 属性
+        private static SqLiteHelper sqlHelper;
+
         /// <summary>
         /// 用于用户信息展示
         /// </summary>

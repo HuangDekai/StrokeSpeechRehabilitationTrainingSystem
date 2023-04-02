@@ -4,4 +4,14 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\脑卒中言语康复训练系统\bin\Debug\net5.0-windows\System.Data.SQLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
