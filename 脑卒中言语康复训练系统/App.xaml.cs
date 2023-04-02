@@ -41,8 +41,9 @@ namespace 脑卒中言语康复训练系统
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterDialog<UserLoginView, UserLoginViewModel>();
+            containerRegistry.Register<IDialogHostService, DialogHostService>();
 
+            containerRegistry.RegisterForNavigation<UserLoginView, UserLoginViewModel>();
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
             containerRegistry.RegisterForNavigation<UserManagementView, UserManagementViewModel>();

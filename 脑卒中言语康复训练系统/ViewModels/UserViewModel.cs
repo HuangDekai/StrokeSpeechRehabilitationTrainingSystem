@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
 {
     internal class UserViewModel : BindableBase
     {
-        public UserViewModel(IDialogService dialogService) 
+        public UserViewModel(IDialogHostService dialogService) 
         {
             userInfo = new UserInfo()
             {
@@ -33,7 +34,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
 
         private void UserLogin(string obj)
         {
-            dialogService.ShowDialog("UserLoginView");
+            dialogService.ShowDialog("UserLoginView", null);
         }
 
         #region 属性
@@ -62,7 +63,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// </summary>
         private ObservableCollection<TrainRecord> trainRecordCollection;
         
-        private readonly IDialogService dialogService;
+        private readonly IDialogHostService dialogService;
 
         public ObservableCollection<TrainRecord> TrainRecordCollection
         {
