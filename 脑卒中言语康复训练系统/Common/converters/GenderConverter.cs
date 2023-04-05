@@ -11,7 +11,7 @@ namespace 脑卒中言语康复训练系统.Common.converters
     internal class GenderConverter : IValueConverter
     {
         /// <summary>
-        /// 目标到源, 将 Gender 的数字转换为 男(1)/女(0)
+        /// 目标到源, 将 Gender 的数字转换为 男(1)/女(0)/空字符串(-1)
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -26,7 +26,11 @@ namespace 脑卒中言语康复训练系统.Common.converters
             {
                 gender = (short)value;
             }
-            return gender == 0 ? "女" : "男";
+            if (gender == 1)
+            {
+                return "男";
+            }
+            return gender == 0 ? "女" : "";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

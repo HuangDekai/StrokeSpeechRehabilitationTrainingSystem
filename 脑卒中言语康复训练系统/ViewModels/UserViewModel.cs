@@ -25,6 +25,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
             string sql = "select * from UserInfo where Id = 1";
             var reader = sqlHelper.ExecuteQuery(sql);
+            
             reader.Read();
 
             userInfo = new UserInfo()
@@ -40,6 +41,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 Address = reader.GetString(reader.GetOrdinal("Address")),
                 Situation = reader.GetString(reader.GetOrdinal("Situation")),
             };
+            sqlHelper.CloseConnection();
             CreateTestData();
             UserLoginCommand = new DelegateCommand<string>(UserLogin);
             this.dialogService = dialogService;
@@ -52,6 +54,8 @@ namespace 脑卒中言语康复训练系统.ViewModels
 
         #region 属性
         private static SqLiteHelper sqlHelper;
+
+        private readonly IDialogHostService dialogService;
 
         /// <summary>
         /// 用于用户信息展示
@@ -77,8 +81,6 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// 用于训练记录展示
         /// </summary>
         private ObservableCollection<TrainRecord> trainRecordCollection;
-        
-        private readonly IDialogHostService dialogService;
 
         public ObservableCollection<TrainRecord> TrainRecordCollection
         {

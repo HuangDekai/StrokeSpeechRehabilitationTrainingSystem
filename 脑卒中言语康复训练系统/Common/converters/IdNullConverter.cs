@@ -8,17 +8,18 @@ using System.Windows.Data;
 
 namespace 脑卒中言语康复训练系统.Common.converters
 {
-    internal class DateToYearMonthDayConverter : IValueConverter
+    /// <summary>
+    /// 用于给 Id = -1 时候转换为空字符串
+    /// </summary>
+    class IdNullConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DateTime date = DateTime.Now;
-            if (value == null || (DateTime)value == DateTime.MinValue)
+            if (value == null || (int) value == -1)
             {
                 return "";
             }
-            date = (DateTime)value;
-            return date.GetDateTimeFormats('D')[0].ToString();
+            return value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

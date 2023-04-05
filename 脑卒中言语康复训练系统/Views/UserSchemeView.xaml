@@ -20,6 +20,8 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:sys="clr-namespace:System;assembly=mscorlib">
                 <sys:Double x:Key="DataGridRow.Height">33</sys:Double>
+
+                <!--  转换器  -->
                 <converter:LevelConverter x:Key="LevelConverter" />
                 <converter:QuantityConverter x:Key="QuantityConverter" />
 

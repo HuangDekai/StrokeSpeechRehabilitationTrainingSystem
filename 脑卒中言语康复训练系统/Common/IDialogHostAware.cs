@@ -29,6 +29,6 @@ namespace 脑卒中言语康复训练系统.Common
         /// <summary>
         /// 取消
         /// </summary>
-        DelegateCommand CancelComand { get; set; } 
+        DelegateCommand CancelCommand { get; set; } 
     }
 }
