@@ -3,12 +3,14 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
@@ -20,11 +22,14 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         public UserLoginViewModel() {
             
             getUserInfoData(1,10);
-            getUserInfoDataRowNum(10);
+            getUserInfoDataRowNum(10,"","");
+            getDepartments();
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             LastPageCommand = new DelegateCommand(LastPage);
             NextPageCommand = new DelegateCommand(NextPage);
+            QueryCommand = new DelegateCommand(Query);
+            SelectCommand = new DelegateCommand<Object>(Select);
         }
 
         private void Cancel()
@@ -40,6 +45,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
                 DialogParameters param = new DialogParameters();
+                param.Add("LoginUser", LoginUser);
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
             }
         }
@@ -49,7 +55,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             if (CurrPage > 1)
             {
                 CurrPage--;
-                getUserInfoData(CurrPage, 10);
+                getUserInfoData(CurrPage, 10, QueryName, QueryDepartment);
             }
         }
 
@@ -58,12 +64,36 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             if (CurrPage < PageNum)
             {
                 CurrPage++;
-                getUserInfoData(CurrPage, 10);
+                getUserInfoData(CurrPage, 10, QueryName, QueryDepartment);
             }
+        }
+
+        private void Query()
+        {
+            getUserInfoData(1, 10, QueryName, QueryDepartment);
+            getUserInfoDataRowNum(10, QueryName, QueryDepartment);
+        }
+        
+        private void Select(object SelectedItem)
+        {
+            LoginUser = (UserInfo)SelectedItem;
+            Save();
         }
 
         #region 属性
         public string DialogHostName { get; set; }
+
+        private UserInfo loginUser;
+
+        /// <summary>
+        /// 用于传递选择的登录用户给 UserView
+        /// </summary>
+        public UserInfo LoginUser
+        {
+            get { return loginUser; }
+            set { loginUser = value; }
+        }
+
 
         /// <summary>
         /// 用于操作 SQLite 数据库
@@ -79,6 +109,17 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         {
             get { return userInfos; }
             set { userInfos = value; RaisePropertyChanged(); }
+        }
+
+        private ObservableCollection<string> departments;
+
+        /// <summary>
+        /// 存放 ComboBox 里的部门
+        /// </summary>
+        public ObservableCollection<string> Departments
+        {
+            get { return departments; }
+            set { departments = value; RaisePropertyChanged(); }
         }
 
 
@@ -105,30 +146,75 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             set { pageNum = value; RaisePropertyChanged(); }
         }
 
+        private string queryName;
+
+        /// <summary>
+        /// 用户搜索时候输入的用户名
+        /// </summary>
+        public string QueryName
+        {
+            get { return queryName; }
+            set { queryName = value; RaisePropertyChanged(); }
+        }
+
+        private string queryDepartment;
+
+        /// <summary>
+        /// 用户搜索时候显示的部门列表
+        /// </summary>
+        public string QueryDepartment
+        {
+            get { return queryDepartment; }
+            set { queryDepartment = value; RaisePropertyChanged(); }
+        }
+
 
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
         public DelegateCommand LastPageCommand { get; set; }
         public DelegateCommand NextPageCommand { get; set; }
+        public DelegateCommand QueryCommand { get; set; }
+        public DelegateCommand<Object> SelectCommand { get; set; }
 
         #endregion
 
         public void OnDialogOpend(IDialogParameters parameters)
         {
         }
-
+        
+        /// <summary>
+        /// 获取数据库连接
+        /// </summary>
         public static void getConnetion() {
             string name = AppDomain.CurrentDomain.BaseDirectory;
             string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
             sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
         }
 
-        public void getUserInfoDataRowNum(int pageSize)
+        /// <summary>
+        /// 查询并更新页面中的当前页和最大页
+        /// </summary>
+        /// <param name="pageSize">每页有多少行</param>
+        /// <param name="name">查询名字</param>
+        /// <param name="department">查询部门</param>
+        public void getUserInfoDataRowNum(int pageSize, string name, string department)
         {
             getConnetion();
-            string sql = "select count(*) as PageNum from UserInfo;";
+            string sql = "select count(*) as PageNum from UserInfo";
+            if (!String.IsNullOrEmpty(name))
+            {
+                sql += " where name='" + name+"'";
+            }
+            if (!String.IsNullOrEmpty(department))
+            {
+                if (String.IsNullOrEmpty(name))
+                {
+                    sql += " where";
+                }
+                sql += " department='" + department+"'";
+            }
             var reader = sqlHelper.ExecuteQuery(sql);
-            PageNum = 1;
+            CurrPage = 1;
             if (reader != null)
             {
                 reader.Read();
@@ -137,12 +223,32 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             reader.Close();
         }
 
-        public void getUserInfoData(int pageIndex, int pageSize)
+        /// <summary>
+        /// 分页查询并更新页面中的用户列表
+        /// </summary>
+        /// <param name="pageIndex">要查询第几页</param>
+        /// <param name="pageSize">每页有多少行</param>
+        /// <param name="name">查询名字</param>
+        /// <param name="department">查询部门</param>
+        public void getUserInfoData(int pageIndex, int pageSize, string name="", string department="")
         {
             getConnetion();
-            UserInfos= new ObservableCollection<UserInfo>();
+            UserInfos = new ObservableCollection<UserInfo>();
             int start = (pageIndex - 1) * pageSize;
-            string sql = "select *  from UserInfo limit " + start + "," + pageSize;
+            string sql = "select *  from UserInfo ";
+            if (!String.IsNullOrEmpty(name))
+            {
+                sql += "where name like'%" + name+"%'";
+            }
+            if (!String.IsNullOrEmpty(department))
+            {
+                if (String.IsNullOrEmpty(name))
+                {
+                    sql += "where";
+                }
+                sql += " department='" + department+"'";
+            }
+            sql += " limit " + start + "," + pageSize;
             var reader = sqlHelper.ExecuteQuery(sql);
             int cnt = 10;
             while (reader.Read())
@@ -159,17 +265,39 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                     Department = reader.GetString(reader.GetOrdinal("Department")),
                     Address = reader.GetString(reader.GetOrdinal("Address")),
                     Situation = reader.GetString(reader.GetOrdinal("Situation")),
+                    IsShowSelect = 0,
                 };
                 UserInfos.Add(userInfo);
                 cnt--;
             }
             reader.Close();
-            
+
             while (cnt > 0)
             {
-                UserInfos.Add(new UserInfo() { Id = -1, Gender = -1, Birth = DateTime.MinValue});
+                UserInfos.Add(new UserInfo() { Id = -1, Gender = -1, Birth = DateTime.MinValue, IsShowSelect=1 });
                 cnt--;
             }
+
+
+        }
+
+        /// <summary>
+        /// 获取部门, 更新下拉列表
+        /// </summary>
+        public void getDepartments()
+        {
+            
+            getConnetion();
+            Departments = new ObservableCollection<string>();
+            Departments.Add("");
+            string sql = "select distinct department from UserInfo;";
+            var reader = sqlHelper.ExecuteQuery(sql);
+            while (reader.Read())
+            {
+                Departments.Add( reader.GetString(0));
+            }
+            reader.Close();
+            
         }
     }
 }

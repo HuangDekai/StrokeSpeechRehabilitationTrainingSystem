@@ -25,8 +25,9 @@
 
                 <!--  转换器  -->
                 <converter:GenderConverter x:Key="GenderConverter" />
-                <converter:IdNullConverter x:Key="IdNullConverter" />
+                <converter:IsNullConverter x:Key="IsNullConverter" />
                 <converter:DateToYearMonthDayConverter x:Key="DateToYearMonthDayConverter" />
+                <converter:IsShowConverter x:Key="IsShowConverter" />
 
                 <!--  表格外边框线粗细，一般不修改  -->
                 <Thickness
@@ -220,7 +221,10 @@
         </Grid.RowDefinitions>
 
         <DockPanel LastChildFill="False">
-            <StackPanel Margin="20,10,0,5" Orientation="Horizontal">
+            <StackPanel
+                Margin="20,10,0,5"
+                Cursor=""
+                Orientation="Horizontal">
                 <TextBlock
                     VerticalAlignment="Center"
                     FontSize="20"
@@ -230,7 +234,8 @@
                     Margin="15,0,0,0"
                     VerticalAlignment="Center"
                     md:HintAssist.Hint="请输入用户姓名"
-                    md:TextFieldAssist.HasClearButton="True" />
+                    md:TextFieldAssist.HasClearButton="True"
+                    Text="{Binding QueryName}" />
                 <TextBlock
                     Margin="30,0,0,0"
                     HorizontalAlignment="Center"
@@ -240,17 +245,18 @@
                 <ComboBox
                     Width="250"
                     Margin="5,0,0,0"
-                    HorizontalAlignment="Center">
-                    <ComboBoxItem Content="所有" />
-                </ComboBox>
+                    HorizontalAlignment="Center"
+                    ItemsSource="{Binding Departments}"
+                    SelectedValue="{Binding QueryDepartment}" />
                 <Button
                     Margin="30,0,0,0"
+                    Command="{Binding QueryCommand}"
                     Content="查询"
                     FontSize="18" />
 
             </StackPanel>
             <Button
-                Margin="20,10,10,5"
+                Margin="20,10,18,5"
                 Command="{Binding CancelCommand}"
                 Content="返回"
                 DockPanel.Dock="Right"
@@ -260,6 +266,7 @@
         <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,0.3" />
 
         <DataGrid
+            x:Name="UserInfoDataGrid"
             Grid.Row="1"
             Width="1200"
             Margin="15,0"
@@ -272,12 +279,12 @@
             IsReadOnly="True"
             ItemsSource="{Binding UserInfos}"
             SelectionMode="Extended"
-            SelectionUnit="Cell">
+            SelectionUnit="FullRow">
 
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="1*"
-                    Binding="{Binding Id, Converter={StaticResource IdNullConverter}}"
+                    Binding="{Binding Id, Converter={StaticResource IsNullConverter}}"
                     Header="序号" />
                 <DataGridTextColumn
                     Width="4*"
@@ -299,7 +306,21 @@
                     Width="4*"
                     Binding="{Binding Department}"
                     Header="所属科室" />
-                <DataGridTextColumn Width="2*" Header="操作" />
+                <DataGridTemplateColumn Width="2*" Header="操作">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                VerticalAlignment="Top"
+                                Command="{Binding DataContext.SelectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                CommandParameter="{Binding ElementName=UserInfoDataGrid, Path=SelectedItem}"
+                                Content="选择"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource MaterialDesignFlatLightButton}"
+                                ToolTip="选择该用户登录"
+                                Visibility="{Binding IsShowSelect, Converter={StaticResource IsShowConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 

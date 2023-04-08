@@ -20,36 +20,33 @@ namespace 脑卒中言语康复训练系统.ViewModels
     {
         public UserViewModel(IDialogHostService dialogService) 
         {
-            string name = AppDomain.CurrentDomain.BaseDirectory;
-            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
-            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
-            string sql = "select * from UserInfo where Id = 1";
-            var reader = sqlHelper.ExecuteQuery(sql);
-            
-            reader.Read();
-
-            userInfo = new UserInfo()
-            {
-                Id = reader.GetInt32(reader.GetOrdinal("Id")), 
-                Order = reader.GetString(reader.GetOrdinal("Order")),
-                Avatar= reader.GetString(reader.GetOrdinal("Avatar")),
-                Name = reader.GetString(reader.GetOrdinal("Name")), 
-                Gender = reader.GetInt16(reader.GetOrdinal("Gender")), 
-                Birth = reader.GetDateTime(reader.GetOrdinal("Birth")), 
-                Phone = reader.GetString(reader.GetOrdinal("Phone")), 
-                Department = reader.GetString(reader.GetOrdinal("Department")),
-                Address = reader.GetString(reader.GetOrdinal("Address")),
-                Situation = reader.GetString(reader.GetOrdinal("Situation")),
-            };
-            sqlHelper.CloseConnection();
             CreateTestData();
             UserLoginCommand = new DelegateCommand<string>(UserLogin);
             this.dialogService = dialogService;
         }
 
-        private void UserLogin(string obj)
+
+        /// <summary>
+        /// 获取SQLite Connection
+        /// </summary>
+        public static void getConnetion()
         {
-            dialogService.ShowDialog("UserLoginView", null);
+            string name = AppDomain.CurrentDomain.BaseDirectory;
+            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+        }
+
+        /// <summary>
+        /// 点击登录按钮绑定的方法
+        /// </summary>
+        /// <param name="obj">暂时无用</param>
+        private async void UserLogin(string obj)
+        {
+            var dialogResult = await dialogService.ShowDialog("UserLoginView", null);
+            if (dialogResult != null)
+            {
+                UserInfo = dialogResult.Parameters.GetValue<UserInfo>("LoginUser");
+            }
         }
 
         #region 属性

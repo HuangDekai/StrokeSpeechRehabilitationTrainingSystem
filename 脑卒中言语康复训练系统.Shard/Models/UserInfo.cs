@@ -17,6 +17,22 @@ namespace 脑卒中言语康复训练系统.Shard.Models
         private string department;
         private string address;
         private string situation;
+        private int isShowSelect;
+
+        /// <summary>
+        /// 是否显示选择按钮,用于给 UserLoginView 中的表格控制是否显示选择
+        /// 0 - Visible 显示
+        /// 1 - Hidden 隐藏但占用空间
+        /// 2 - Collapsed 隐藏且不占用空间
+        /// </summary>
+        public int IsShowSelect
+        {
+            get { return isShowSelect; }
+            set { isShowSelect = value; }
+        }
+
+
+
 
         /// <summary>
         /// 用户编号
