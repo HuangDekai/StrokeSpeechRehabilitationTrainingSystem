@@ -180,6 +180,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
 
         public void OnDialogOpend(IDialogParameters parameters)
         {
+
         }
         
         /// <summary>

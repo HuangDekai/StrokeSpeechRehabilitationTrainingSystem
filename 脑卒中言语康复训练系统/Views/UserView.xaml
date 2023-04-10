@@ -18,6 +18,7 @@
             <converter:DateToYearMonthDayConverter x:Key="DateToYearMonthDayConverter" />
             <converter:DateToYearMonthDayHourMinuteSecondConverter x:Key="DateToYearMonthDayHourMinuteSecondConverter" />
             <converter:TimeSpanToHourMinuteSecondConvert x:Key="TimeSpanToHourMinuteSecondConvert" />
+            <converter:IsShowConverter x:Key="IsShowConverter" />
 
             <!--  样式  -->
             <Style TargetType="Border">
@@ -58,12 +59,32 @@
                     FontWeight="Bold"
                     Text="用户信息" />
 
-                <Button
-                    Margin="10,5"
-                    HorizontalAlignment="Right"
-                    Command="{Binding UserLoginCommand}"
-                    CommandParameter="用户登录"
-                    Content="登录" />
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button
+                        Margin="10,5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding UserLogoutCommand}"
+                        Content="注销登录"
+                        Style="{StaticResource MaterialDesignOutlinedLightButton}"
+                        Visibility="{Binding LogoutBtnIsShow, Converter={StaticResource IsShowConverter}}" />
+
+                    <Button
+                        Margin="10,5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding UserLoginCommand}"
+                        Content="更换用户"
+                        Visibility="{Binding ChangeBtnIsShow, Converter={StaticResource IsShowConverter}}" />
+
+                    <Button
+                        Margin="10,5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding UserLoginCommand}"
+                        CommandParameter="用户登录"
+                        Content="用户登录"
+                        Cursor=""
+                        Visibility="{Binding LoginBtnIsShow, Converter={StaticResource IsShowConverter}}" />
+
+                </StackPanel>
             </DockPanel>
 
             <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,0.3" />
@@ -291,12 +312,6 @@
                         FontSize="20"
                         FontWeight="Bold"
                         Text="训练记录" />
-                    <Button
-                        VerticalAlignment="Top"
-                        Content="更多"
-                        DockPanel.Dock="Right"
-                        Style="{StaticResource MaterialDesignFlatLightButton}"
-                        ToolTip="查看用户全部训练记录" />
                 </DockPanel>
                 <DataGrid
                     Margin="15,0"
@@ -305,12 +320,13 @@
                     ColumnWidth="auto"
                     IsReadOnly="True"
                     ItemsSource="{Binding TrainRecordCollection}"
+                    SelectionChanged="DataGrid_SelectionChanged"
                     SelectionMode="Extended"
                     SelectionUnit="Cell">
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="2*"
-                            Binding="{Binding Id}"
+                            Binding="{Binding Sort}"
                             Header="编号">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -343,7 +359,7 @@
                         </DataGridTextColumn>
                         <DataGridTextColumn
                             Width="6*"
-                            Binding="{Binding CreateTime, Converter={StaticResource DateToYearMonthDayHourMinuteSecondConverter}}"
+                            Binding="{Binding StartTime, Converter={StaticResource DateToYearMonthDayHourMinuteSecondConverter}}"
                             Header="训练时间">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -371,7 +387,7 @@
                                         Content="详情"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource MaterialDesignFlatLightButton}"
-                                        ToolTip="查看用户全部训练记录" />
+                                        ToolTip="查看用户训练记录详情" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -388,12 +404,6 @@
                         FontSize="20"
                         FontWeight="Bold"
                         Text="评测记录" />
-                    <Button
-                        VerticalAlignment="Top"
-                        Content="更多"
-                        DockPanel.Dock="Right"
-                        Style="{StaticResource MaterialDesignFlatLightButton}"
-                        ToolTip="查看用户全部评测记录" />
                 </DockPanel>
 
                 <DataGrid
@@ -409,7 +419,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="2*"
-                            Binding="{Binding Id}"
+                            Binding="{Binding Sort}"
                             Header="编号">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -419,7 +429,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="4*"
                             Binding="{Binding Name}"
                             Header="评测名称">
                             <DataGridTextColumn.ElementStyle>
@@ -441,7 +451,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="2*"
                             Binding="{Binding Score}"
                             Header="评测得分">
                             <DataGridTextColumn.ElementStyle>
@@ -452,7 +462,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="5*"
+                            Width="4*"
                             Binding="{Binding CreateTime, Converter={StaticResource DateToYearMonthDayHourMinuteSecondConverter}}"
                             Header="评测时间">
                             <DataGridTextColumn.ElementStyle>
@@ -463,7 +473,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="4*"
+                            Width="3*"
                             Binding="{Binding Cost, Converter={StaticResource TimeSpanToHourMinuteSecondConvert}}"
                             Header="评测用时">
                             <DataGridTextColumn.ElementStyle>
@@ -473,7 +483,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTemplateColumn Width="4*" Header="操作">
+                        <DataGridTemplateColumn Width="2*" Header="操作">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
@@ -481,7 +491,7 @@
                                         Content="详情"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource MaterialDesignFlatLightButton}"
-                                        ToolTip="查看用户全部训练记录" />
+                                        ToolTip="查看用户测评记录详情" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

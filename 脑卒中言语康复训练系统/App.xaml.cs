@@ -44,6 +44,8 @@ namespace 脑卒中言语康复训练系统
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             containerRegistry.RegisterForNavigation<UserLoginView, UserLoginViewModel>();
+            containerRegistry.RegisterForNavigation<MessageBoxView, MessageBoxViewModel>();
+
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
             containerRegistry.RegisterForNavigation<UserManagementView, UserManagementViewModel>();

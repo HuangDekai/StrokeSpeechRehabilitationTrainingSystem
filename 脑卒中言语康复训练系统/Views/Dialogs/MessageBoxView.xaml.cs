@@ -13,21 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace 脑卒中言语康复训练系统.Views
+namespace 脑卒中言语康复训练系统.Views.Dialogs
 {
     /// <summary>
-    /// UserView.xaml 的交互逻辑
+    /// MessageBoxView.xaml 的交互逻辑
     /// </summary>
-    public partial class UserView : UserControl
+    public partial class MessageBoxView : UserControl
     {
-        public UserView()
+        public MessageBoxView()
         {
             InitializeComponent();
         }
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

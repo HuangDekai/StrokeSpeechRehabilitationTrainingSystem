@@ -17,7 +17,7 @@ namespace 脑卒中言语康复训练系统.Common.converters
             {
                 date = (DateTime)value;
             }
-            return string.Format(" {0:U} ", date);
+            return string.Format(" {0:G} ", date.ToLocalTime());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
