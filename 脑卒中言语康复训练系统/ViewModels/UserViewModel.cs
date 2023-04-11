@@ -66,8 +66,8 @@ namespace 脑卒中言语康复训练系统.ViewModels
         private async void UserLogout()
         {
             var parameters = new DialogParameters();
-            parameters.Add("Title", "温馨提示");
-            parameters.Add("Message", "是否确定要退出登录?");
+            parameters.Add("Title", "退出登录");
+            parameters.Add("Message", "您确定要退出登录用户 [" + UserInfo.Name + "] ?");
             var dialogResult = await dialogService.ShowDialog("MessageBoxView", parameters);
             if (dialogResult != null && dialogResult.Result == ButtonResult.OK)
             {

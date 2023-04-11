@@ -19,7 +19,10 @@
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TextBlock Margin="5,0" Text="{Binding Title}" />
+        <TextBlock
+            Margin="5,0"
+            FontWeight="Bold"
+            Text="{Binding Title}" />
         <TextBlock
             Grid.Row="1"
             Margin="5,0"

@@ -79,5 +79,29 @@ namespace 脑卒中言语康复训练系统.Views
                 drawerHost.IsLeftDrawerOpen = false;
             };
         }
+        private Point startPoint;
+        private Point windowPoint;
+        private void ColorZone_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            startPoint = e.GetPosition(null);
+            windowPoint = new Point(this.Left, this.Top);
+        }
+
+        private void ColorZone_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            startPoint = new Point();
+            windowPoint = new Point();
+        }
+
+        private void ColorZone_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point currentPoint = e.GetPosition(null);
+                Vector offset = currentPoint - startPoint;
+                this.Left = windowPoint.X + offset.X;
+                this.Top = windowPoint.Y + offset.Y;
+            }
+        }
     }
 }
