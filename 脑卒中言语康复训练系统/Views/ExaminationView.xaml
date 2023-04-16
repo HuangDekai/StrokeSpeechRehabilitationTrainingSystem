@@ -53,6 +53,7 @@
 
                                 <StackPanel>
                                     <TextBlock
+                                        x:Name="ExaminationName"
                                         Margin="0,10,0,0"
                                         Padding="10,5"
                                         HorizontalAlignment="Center"
@@ -73,7 +74,8 @@
                                         HorizontalAlignment="Center"
                                         Background="#048cdd"
                                         BorderBrush="#048cdd"
-                                        Command="{Binding AddCommand}"
+                                        Command="{Binding DataContext.ToExaminationCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        CommandParameter="{Binding ElementName=ExaminationName, Path=Text}"
                                         Content="启动"
                                         FontSize="20" />
                                 </StackPanel>
