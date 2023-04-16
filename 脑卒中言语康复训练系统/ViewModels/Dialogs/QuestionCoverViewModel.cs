@@ -33,7 +33,9 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
-                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK));
+                var parameters = new DialogParameters();
+                parameters.Add("ExaminationInfo", ExaminationInfo);
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, parameters));
             }
         }
 
