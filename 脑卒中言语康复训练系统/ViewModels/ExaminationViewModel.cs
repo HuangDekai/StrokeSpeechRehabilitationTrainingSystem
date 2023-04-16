@@ -29,8 +29,11 @@ namespace 脑卒中言语康复训练系统.ViewModels
             var dialogResult = await dialogService.ShowDialog("QuestionCoverView", parameters);
             if (dialogResult != null && dialogResult.Result == ButtonResult.OK)
             {
-                var a = dialogResult.Parameters.GetValue<Examination>("ExaminationInfo");
-                var b = 0;
+                var ExaminationInfo = dialogResult.Parameters.GetValue<Examination>("ExaminationInfo");
+                if (ExaminationInfo != null)
+                {
+
+                }
             }
         }
 
