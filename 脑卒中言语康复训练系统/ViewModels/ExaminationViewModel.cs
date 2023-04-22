@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Extensions;
+using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
@@ -24,7 +25,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             this.dialogService = dialogService;
             this.regionManager = regionManager;
             ToExaminationCommand = new DelegateCommand<string>(ToExamination);
-            CreateData();
+            GetExaminationLooks();
         }
 
         public DelegateCommand<string> ToExaminationCommand { get; private set; }
@@ -59,6 +60,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         #region 属性
         private readonly IDialogHostService dialogService;
         private readonly IRegionManager regionManager;
+        private static SqLiteHelper sqlHelper;
 
         private ObservableCollection<ExaminationLook> examinationLooks;
         public ObservableCollection<ExaminationLook> ExaminationLooks
@@ -86,14 +88,29 @@ namespace 脑卒中言语康复训练系统.ViewModels
             return isSuccess;
         }
 
-        private void CreateData()
-		{
-			ExaminationLooks = new ObservableCollection<ExaminationLook>();
-            ExaminationLooks.Add(new ExaminationLook() { Name = "容纳他人量表"});
-            for (int i = 0; i < 10; i++)
-			{
-				ExaminationLooks.Add(new ExaminationLook() { Name = "容纳他人量表" + i });
-			}
-		}
-	}
+        /// <summary>
+        /// 获取SQLite Connection
+        /// </summary>
+        private static void GetConnetion()
+        {
+            string name = AppDomain.CurrentDomain.BaseDirectory;
+            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+        }
+
+
+        private void GetExaminationLooks()
+        {
+            ExaminationLooks = new ObservableCollection<ExaminationLook>();
+            GetConnetion();
+            var reader = sqlHelper.ReadFullTable("Examination");
+
+            while (reader.Read())
+            {
+                ExaminationLooks.Add(new ExaminationLook() { Name = reader.GetString(reader.GetOrdinal("Name")) });
+            }
+            reader.Close();
+            sqlHelper.CloseConnection();
+        }
+    }
 }
