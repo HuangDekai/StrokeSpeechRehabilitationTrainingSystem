@@ -38,6 +38,19 @@ namespace 脑卒中言语康复训练系统.ViewModels
         private QuestionRaise currQuestion;
         private int currQuestionIndex;
         private ExaminationRaise examinationRaise;
+        private int isShowCommitButton = 2;
+
+        /// <summary>
+        /// 是否显示提交按钮,用于给 QuestionItemView 中提交是否显示, 默认=2
+        /// 0 - Visible 显示
+        /// 1 - Hidden 隐藏但占用空间
+        /// 2 - Collapsed 隐藏且不占用空间
+        /// </summary>
+        public int IsShowCommitButton
+        {
+            get { return isShowCommitButton; }
+            set { isShowCommitButton = value; RaisePropertyChanged(); }
+        }
 
         /// <summary>
         /// 用于表示被选择的问题的题号, 初始值为0
@@ -128,6 +141,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 CurrQuestion = examinationRaise.Questions[CurrQuestionIndex];
                 CurrQuestion.IsCurrSelect = true;
             }
+            ButtonShowFlush();
         }
 
         /// <summary>
@@ -142,6 +156,34 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 CurrQuestion = examinationRaise.Questions[CurrQuestionIndex];
                 CurrQuestion.IsCurrSelect = true;
             }
+            ButtonShowFlush();
+        }
+
+        private void ButtonShowFlush()
+        {
+            if (IsCheckedAll())
+            {
+                IsShowCommitButton = 0;
+            } else
+            {
+                IsShowCommitButton = 2;
+            }
+        }
+
+        /// <summary>
+        /// 用于判断是否每个问题都被选过了
+        /// </summary>
+        /// <returns></returns>
+        private bool IsCheckedAll()
+        {
+            foreach (var question in examinationRaise.Questions)
+            {
+                if (question.Select == null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -169,13 +211,13 @@ namespace 脑卒中言语康复训练系统.ViewModels
         }
 
         /// <summary>
-        /// 该方法用于判断当前页面是否为导航目标页面。
+        /// 该方法用于设置进入时候是否重用原来的页面
         /// </summary>
         /// <param name="navigationContext"></param>
-        /// <returns></returns>
+        /// <returns>false - 每次进入该页面都创建一个新实例; true - 重用</returns>
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;
         }
 
         /// <summary>

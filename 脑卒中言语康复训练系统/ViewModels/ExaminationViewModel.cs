@@ -1,5 +1,6 @@
 ﻿using ImTools;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -37,7 +38,8 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 {
                     var navigationParam = new NavigationParameters();
                     navigationParam.Add("ExaminationInfo", ExaminationInfo);
-                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("QuestionItemView", navigationParam);
+                    parameters.Add("createNewRegionInstance", true);
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("QuestionItemView",navigationParam);
                 }
             }
         }
