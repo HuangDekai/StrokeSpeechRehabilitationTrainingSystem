@@ -116,6 +116,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                 };
             }
             reader.Close();
+            sqlHelper.CloseConnection();
         }
     }
 }

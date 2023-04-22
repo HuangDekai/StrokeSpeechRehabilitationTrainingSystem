@@ -129,6 +129,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 TrainRecordCollection.Add(trainRecord);
             }
             reader.Close();
+            sqlHelper.CloseConnection();
         }
 
         /// <summary>
@@ -169,6 +170,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 ExaminationRecordCollection.Add(examinationRecord);
             }
             reader.Close();
+            sqlHelper.CloseConnection();
         }
 
         #region 属性

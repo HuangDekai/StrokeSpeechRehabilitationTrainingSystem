@@ -222,6 +222,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                 PageNum = reader.GetInt32(0) / pageSize + 1;
             }
             reader.Close();
+            sqlHelper.CloseConnection();
         }
 
         /// <summary>
@@ -272,6 +273,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                 cnt--;
             }
             reader.Close();
+            sqlHelper.CloseConnection();
 
             while (cnt > 0)
             {
@@ -298,7 +300,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                 Departments.Add( reader.GetString(0));
             }
             reader.Close();
-            
+            sqlHelper.CloseConnection();
         }
     }
 }

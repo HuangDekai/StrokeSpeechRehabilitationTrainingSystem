@@ -267,6 +267,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 questions.Add(questionRaise);
             }
             reader.Close();
+            sqlHelper.CloseConnection();
             ExaminationRaise.Questions = questions;
         }
 
@@ -277,6 +278,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// <returns></returns>
         public ObservableCollection<OptionRaise> GetOptionList(QuestionRaise questionRaise)
         {
+            GetConnetion();
             string sql = "select * from Option limit " + (questionRaise.Start - 1) + "," + questionRaise.Quantity;
             var reader = sqlHelper.ExecuteQuery(sql);
             ObservableCollection<OptionRaise> options = new ObservableCollection<OptionRaise>();
@@ -295,6 +297,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 options.Add(optionRaise);
             }
             reader.Close();
+            sqlHelper.CloseConnection();
             return options;
         }
     }
