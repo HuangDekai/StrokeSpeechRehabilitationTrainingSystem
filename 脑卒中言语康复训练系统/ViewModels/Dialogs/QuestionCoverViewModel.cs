@@ -109,6 +109,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
                     Name = reader.GetString(reader.GetOrdinal("Name")),
                     Normal = reader.GetString(reader.GetOrdinal("Normal")),
+                    Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                     Content = reader.GetString(reader.GetOrdinal("Content")),
                     CreateTime = Convert.ToDateTime(reader.GetString(reader.GetOrdinal("CreateTime"))),
                     UpdateTime = Convert.ToDateTime(reader.GetString(reader.GetOrdinal("UpdateTime"))),

@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace 脑卒中言语康复训练系统.Shard.Models
+namespace 脑卒中言语康复训练系统.Models
 {
     /// <summary>
     /// 用于 QuestionView 展示问卷内容
     /// </summary>
-    public class Examination : BaseModel
+    public class ExaminationRaise : BaseModelRaise
     {
         private string name;
 
@@ -19,15 +21,15 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 
         private int quantity;
 
-        private List<Question> questionList;
+        private ObservableCollection<QuestionRaise> questions;
 
         /// <summary>
         /// 冗余字段, 用于存储试卷下的问题
         /// </summary>
-        public List<Question> QuestionList
+        public ObservableCollection<QuestionRaise> Questions
         {
-            get { return questionList; }
-            set { questionList = value; }
+            get { return questions; }
+            set { questions = value; RaisePropertyChanged(); }
         }
 
 

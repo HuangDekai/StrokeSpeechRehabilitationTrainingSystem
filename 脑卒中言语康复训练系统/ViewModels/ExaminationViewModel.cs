@@ -1,6 +1,7 @@
 ﻿using ImTools;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Extensions;
 using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
 {
     class ExaminationViewModel : BindableBase
     {
-		public ExaminationViewModel(IDialogHostService dialogService) 
+		public ExaminationViewModel(IDialogHostService dialogService, IRegionManager regionManager) 
 		{ 
             this.dialogService = dialogService;
+            this.regionManager = regionManager;
             ToExaminationCommand = new DelegateCommand<string>(ToExamination);
             CreateData();
         }
@@ -32,13 +35,16 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 var ExaminationInfo = dialogResult.Parameters.GetValue<Examination>("ExaminationInfo");
                 if (ExaminationInfo != null)
                 {
-
+                    var navigationParam = new NavigationParameters();
+                    navigationParam.Add("ExaminationInfo", ExaminationInfo);
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("QuestionItemView", navigationParam);
                 }
             }
         }
 
         #region 属性
         private readonly IDialogHostService dialogService;
+        private readonly IRegionManager regionManager;
 
         private ObservableCollection<ExaminationLook> examinationLooks;
         public ObservableCollection<ExaminationLook> ExaminationLooks

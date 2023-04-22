@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App.xaml.cs~RF364d6d61.TMP" />
     <None Remove="Image\Default.png" />
     <None Remove="Image\Kato.jpg" />
     <None Remove="ViewModels\Dialogs\g50anlks.roy~" />
+    <None Remove="ViewModels\ppahbva2.1ue~" />
+    <None Remove="ViewModels\QuestionItemViewModel.cs~RF6e578a1.TMP" />
+    <None Remove="Views\Dialogs\QuestionItemView.xaml~RF354d81c1.TMP" />
   </ItemGroup>
 
   <ItemGroup>
