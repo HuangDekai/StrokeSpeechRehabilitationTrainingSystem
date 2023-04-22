@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
+using 脑卒中言语康复训练系统.Extensions;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
@@ -30,6 +31,10 @@ namespace 脑卒中言语康复训练系统.ViewModels
             NextCommand = new DelegateCommand(Next);
             SelectCommand = new DelegateCommand<OptionRaise>(Select);
             ItemSelectCommand = new DelegateCommand<QuestionRaise>(ItemSelect);
+            CommitCommand = new DelegateCommand(Commit);
+
+            record = new ExaminationRecord();
+            record.StartTime= DateTime.Now;
         }
 
         #region 属性
@@ -42,6 +47,16 @@ namespace 脑卒中言语康复训练系统.ViewModels
         private int currQuestionIndex;
         private ExaminationRaise examinationRaise;
         private int isShowCommitButton = 2;
+        private ExaminationRecord record;
+
+        /// <summary>
+        /// 用于记录本次问卷相关信息
+        /// </summary>
+        public ExaminationRecord Record
+        {
+            get { return record; }
+            set { record = value; }
+        }
 
         /// <summary>
         /// 是否显示提交按钮,用于给 QuestionItemView 中提交是否显示, 默认=2
@@ -90,6 +105,37 @@ namespace 脑卒中言语康复训练系统.ViewModels
         public DelegateCommand NextCommand { get; set; }
         public DelegateCommand<OptionRaise> SelectCommand { get; set; }
         public DelegateCommand<QuestionRaise> ItemSelectCommand { get; set; }
+        public DelegateCommand CommitCommand { get; set; }
+
+        /// <summary>
+        /// CommitCommand 绑定方法, 点击按钮提交答题记录
+        /// </summary>
+        private async void Commit()
+        {
+            var endTime = DateTime.Now;
+            record.EndTime = endTime;
+            record.CreateTime = endTime;
+            record.UpdateTime = endTime;
+            record.UserId = LoginVerificationTool.GetLoginUserId();
+            record.ExaminationId = ExaminationRaise.Id;
+            double score = 0;
+            foreach (var question in ExaminationRaise.Questions)
+            {
+                score += question.Select.Weight;
+            }
+            record.Score = score;
+
+            var parameters = new DialogParameters();
+            parameters.Add("Title", "温馨提示");
+            parameters.Add("Message", "确认要提交量表测评吗?");
+            var result = await dialogService.ShowDialog("MessageBoxView", parameters);
+
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                InsertExaminationRecord(record);
+                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ExaminationView");
+            }
+        }
 
         /// <summary>
         /// ItemSelectCommand 绑定方法, 点击按钮切换到对应的题目
@@ -260,7 +306,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// <summary>
         /// 获取SQLite Connection
         /// </summary>
-        public static void GetConnetion()
+        private static void GetConnetion()
         {
             string name = AppDomain.CurrentDomain.BaseDirectory;
             string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
@@ -270,7 +316,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// <summary>
         /// 将 ExaminationInfo 对应的 Question 获取并放入 ExaminationInfo.QuestionList中
         /// </summary>
-        public void GetQuestionList(Examination examinationInfo)
+        private void GetQuestionList(Examination examinationInfo)
         {
             GetConnetion();
             string sql = "select * from Question where ExaminationId = " + examinationInfo.Id;
@@ -304,7 +350,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// </summary>
         /// <param name="question">传入的 question 实体</param>
         /// <returns></returns>
-        public ObservableCollection<OptionRaise> GetOptionList(QuestionRaise questionRaise)
+        private ObservableCollection<OptionRaise> GetOptionList(QuestionRaise questionRaise)
         {
             GetConnetion();
             string sql = "select * from Option limit " + (questionRaise.Start - 1) + "," + questionRaise.Quantity;
@@ -327,6 +373,22 @@ namespace 脑卒中言语康复训练系统.ViewModels
             reader.Close();
             sqlHelper.CloseConnection();
             return options;
+        }
+
+        private void InsertExaminationRecord(ExaminationRecord examinationRecord)
+        {
+            GetConnetion();
+            string sql = "INSERT INTO ExaminationRecord(UserId,ExaminationId,Score,StartTime,EndTime,CreateTime,UpdateTime) Values (" + 
+                examinationRecord.UserId + "," +
+                examinationRecord.ExaminationId + "," +
+                examinationRecord.Score + "," +
+                "'" + examinationRecord.StartTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + examinationRecord.EndTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + examinationRecord.CreateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + examinationRecord.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'" 
+                + ")";
+            sqlHelper.ExecuteQuery(sql);
+            sqlHelper.CloseConnection();
         }
     }
 }

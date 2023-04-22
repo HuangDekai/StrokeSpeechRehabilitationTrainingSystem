@@ -2,6 +2,7 @@
 using ImTools;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections;
@@ -13,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Shard.Helper;
@@ -20,7 +22,7 @@ using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
 {
-    internal class UserViewModel : BindableBase
+    internal class UserViewModel : BindableBase, INavigationAware
     {
         public UserViewModel(IDialogHostService dialogService) 
         {
@@ -154,7 +156,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             string sql = "select * from ExaminationRecord " +
                          "join Examination " +
                          "on ExaminationRecord.ExaminationId = Examination.Id " +
-                         "where ExaminationRecord.Id = " + userInfo.Id;
+                         "where ExaminationRecord.UserId = " + userInfo.Id;
             var reader = sqlHelper.ExecuteQuery(sql);
             int i = 1;
             while (reader.Read())
@@ -163,6 +165,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 {
                     Sort = i++,
                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    ExaminationId = reader.GetInt32(reader.GetOrdinal("ExaminationId")),
                     UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
                     Name = reader.GetString(reader.GetOrdinal("Name")),
                     Normal  = reader.GetString(reader.GetOrdinal("Normal")),
@@ -178,6 +181,73 @@ namespace 脑卒中言语康复训练系统.ViewModels
             }
             reader.Close();
             sqlHelper.CloseConnection();
+        }
+
+        /// <summary>
+        /// 获取用户信息,用于去更新用户信息
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns>用户信息 / null</returns>
+        private UserInfo GetUserInfo(int userId)
+        {
+            GetConnetion();
+            string sql = "select * from UserInfo where id = " + userId;
+            UserInfo userInfo = null; 
+            var reader = sqlHelper.ExecuteQuery(sql);
+            if (reader.Read())
+            {
+                userInfo = new UserInfo()
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Order = reader.GetString(reader.GetOrdinal("Order")),
+                    Avatar = reader.GetString(reader.GetOrdinal("Avatar")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Gender = reader.GetInt16(reader.GetOrdinal("Gender")),
+                    Birth = reader.GetDateTime(reader.GetOrdinal("Birth")),
+                    Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                    Department = reader.GetString(reader.GetOrdinal("Department")),
+                    Address = reader.GetString(reader.GetOrdinal("Address")),
+                    Situation = reader.GetString(reader.GetOrdinal("Situation")),
+                    IsShowSelect = 0,
+                };
+            }
+            reader.Close();
+            sqlHelper.CloseConnection();
+
+            return userInfo;
+        }
+
+        /// <summary>
+        /// 进入当前页面时
+        /// </summary>
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (LoginVerificationTool.IsLogin())
+            {
+                UserInfo = GetUserInfo(LoginVerificationTool.GetLoginUserId());
+                GetExaminationRecord(UserInfo);
+                GetTrainRecord(UserInfo);
+                LoginBtnIsShow = 2;
+                ChangeBtnIsShow = 0;
+                LogoutBtnIsShow = 0;
+            }
+        }
+
+        /// <summary>
+        /// 是否重用当前页面
+        /// </summary>
+        /// <returns>true 是</returns>
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// 离开页面时操作
+        /// </summary>
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
         }
 
         #region 属性
@@ -228,31 +298,33 @@ namespace 脑卒中言语康复训练系统.ViewModels
         }
 
 
+
+        private UserInfo userInfo;
         /// <summary>
         /// 用于用户信息展示
         /// </summary>
-        private UserInfo userInfo;
         public UserInfo UserInfo
         {
             get { return userInfo; }
             set { userInfo = value; RaisePropertyChanged(); }
         }
 
+
+        private ObservableCollection<ExaminationRecord> examinationRecordCollection;
         /// <summary>
         /// 用于测评记录展示
         /// </summary>
-        private ObservableCollection<ExaminationRecord> examinationRecordCollection;
         public ObservableCollection<ExaminationRecord> ExaminationRecordCollection
         {
             get { return examinationRecordCollection; }
             set { examinationRecordCollection = value; RaisePropertyChanged(); }
         }
 
+
+        private ObservableCollection<TrainRecord> trainRecordCollection;
         /// <summary>
         /// 用于训练记录展示
         /// </summary>
-        private ObservableCollection<TrainRecord> trainRecordCollection;
-
         public ObservableCollection<TrainRecord> TrainRecordCollection
         {
             get { return trainRecordCollection; }

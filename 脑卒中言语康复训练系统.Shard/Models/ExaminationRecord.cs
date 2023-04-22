@@ -20,11 +20,22 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private DateTime startTime;
 		private DateTime endTime;
         private int sort;
+		private int examinationId;
 
-        /// <summary>
-        /// 冗余字段,用于表中排序序号
-        /// </summary>
-        public int Sort
+		/// <summary>
+		/// 对应的问卷的Id
+		/// </summary>
+		public int ExaminationId
+		{
+			get { return examinationId; }
+			set { examinationId = value; }
+		}
+
+
+		/// <summary>
+		/// 冗余字段,用于表中排序序号
+		/// </summary>
+		public int Sort
         {
             get { return sort; }
             set { sort = value; }
