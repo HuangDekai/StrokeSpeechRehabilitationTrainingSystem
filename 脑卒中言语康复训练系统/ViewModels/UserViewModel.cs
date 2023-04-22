@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
 
@@ -57,6 +58,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 {
                     SwitchBtnShow();
                 }
+
+                //登录用户写入数据库中
+                LoginVerificationTool.Login(UserInfo.Id);
             }
         }
 
@@ -75,6 +79,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 UserInfo = null;
                 TrainRecordCollection.Clear();
                 ExaminationRecordCollection.Clear();
+
+                //用户退出登录数据从数据库中移除
+                LoginVerificationTool.Logout();
             }
             
         }

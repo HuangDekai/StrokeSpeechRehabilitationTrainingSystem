@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
@@ -20,8 +21,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
     public class QuestionItemViewModel : BindableBase, INavigationAware
     {
 
-         public QuestionItemViewModel(IRegionManager regionManager)
+         public QuestionItemViewModel(IDialogHostService dialogService, IRegionManager regionManager)
         {
+            this.dialogService = dialogService;
             this.regionManager = regionManager;
             CancelCommand = new DelegateCommand(Cancel);
             LastCommand = new DelegateCommand(Last);
@@ -33,6 +35,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         #region 属性
         public string DialogHostName { get; set; }
         private static SqLiteHelper sqlHelper;
+        private readonly IDialogHostService dialogService;
         private readonly IRegionManager regionManager;
         private IRegionNavigationJournal journal;
         private QuestionRaise currQuestion;
@@ -190,7 +193,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// 在导航到页面时被调用
         /// </summary>
         /// <param name="navigationContext">传入的内容</param>
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (navigationContext.Parameters.ContainsKey("ExaminationInfo"))
             {
@@ -207,6 +210,13 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 };
                 GetQuestionList(ExaminationInfo);
                 CurrQuestion = examinationRaise.Questions[CurrQuestionIndex];
+                
+                //如果未登录,调用返回方法返回之前界面
+                var isLogin = await LoginVerification();
+                if (!isLogin)
+                {
+                    Cancel();
+                }
             }
         }
 
@@ -227,6 +237,24 @@ namespace 脑卒中言语康复训练系统.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
            
+        }
+
+        /// <summary>
+        /// 用于判断是否登录了,若未登录,进行拦截
+        /// </summary>
+        /// <returns>登录(true)/未登录(false)</returns>
+        private async Task<bool> LoginVerification()
+        {
+            bool isSuccess = true;
+            if (!LoginVerificationTool.IsLogin())
+            {
+                var parameters = new DialogParameters();
+                parameters.Add("Title", "温馨提示");
+                parameters.Add("Message", "请先登录再进行量表测评!");
+                await dialogService.ShowDialog("MessageBoxView", parameters);
+                isSuccess = false;
+            }
+            return isSuccess;
         }
 
         /// <summary>

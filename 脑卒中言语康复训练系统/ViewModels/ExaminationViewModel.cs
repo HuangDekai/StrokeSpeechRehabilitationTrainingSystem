@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Extensions;
 using 脑卒中言语康复训练系统.Shard.Models;
 
@@ -26,8 +27,19 @@ namespace 脑卒中言语康复训练系统.ViewModels
             CreateData();
         }
 
+        public DelegateCommand<string> ToExaminationCommand { get; private set; }
+
+        /// <summary>
+        /// ToExaminationCommand 绑定的方法, 进入 QuestionCoverView 这个 Dialog, 若在 QuestionCoverView 确认, 则进入 QuestionItemView 问卷界面
+        /// </summary>
+        /// <param name="obj"></param>
         private async void ToExamination(Object obj)
         {
+            var isLogin = await LoginVerification();
+            if (!isLogin)
+            {
+                return;
+            }
             var parameters = new DialogParameters();
             parameters.Add("Name", obj.ToString());
             var dialogResult = await dialogService.ShowDialog("QuestionCoverView", parameters);
@@ -55,7 +67,24 @@ namespace 脑卒中言语康复训练系统.ViewModels
             set { examinationLooks = value; RaisePropertyChanged(); }
         }
         #endregion
-        public DelegateCommand<string> ToExaminationCommand { get; private set; }
+
+        /// <summary>
+        /// 用于判断是否登录了,若未登录,进行拦截
+        /// </summary>
+        /// <returns>登录(true)/未登录(false)</returns>
+        private async Task<bool> LoginVerification()
+        {
+            bool isSuccess = true;
+            if (!LoginVerificationTool.IsLogin())
+            {
+                var parameters = new DialogParameters();
+                parameters.Add("Title", "温馨提示");
+                parameters.Add("Message", "请先登录再进行量表测评!");
+                await dialogService.ShowDialog("MessageBoxView", parameters);
+                isSuccess = false;
+            }
+            return isSuccess;
+        }
 
         private void CreateData()
 		{
