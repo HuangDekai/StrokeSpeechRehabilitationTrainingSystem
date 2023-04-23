@@ -12,7 +12,19 @@ namespace 脑卒中言语康复训练系统.Models
         private string name;
         private int quantity;
         private string content;
+        private string type;
         private ObservableCollection<TrainQuestionRaise> trainQuestions;
+        private ObservableCollection<AbilityRaise> abilities;
+
+
+        /// <summary>
+        /// 冗余字段,用于存储 Ability 要训练的能力
+        /// </summary>
+        public ObservableCollection<AbilityRaise> Abilities
+        {
+            get { return abilities; }
+            set { abilities = value; RaisePropertyChanged(); }
+        }
 
         /// <summary>
         /// 冗余字段,用于存储 TrainQuestion 训练问题
@@ -21,6 +33,15 @@ namespace 脑卒中言语康复训练系统.Models
         {
             get { return trainQuestions; }
             set { trainQuestions = value; RaisePropertyChanged(); }
+        }
+
+        /// <summary>
+        /// 训练类型,用于打开Type + "View" 的页面
+        /// </summary>
+        public string Type
+        {
+            get { return type; }
+            set { type = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -33,7 +54,7 @@ namespace 脑卒中言语康复训练系统.Models
         }
 
         /// <summary>
-        /// 训练题数
+        /// 冗余字段,训练题数
         /// </summary>
         public int Qutantity
         {

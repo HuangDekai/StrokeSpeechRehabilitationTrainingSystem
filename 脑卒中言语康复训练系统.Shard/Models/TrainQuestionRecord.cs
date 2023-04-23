@@ -13,6 +13,26 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private DateTime startTime;
 		private DateTime endTime;
 		private TimeSpan cost;
+		private int retry;
+        private int score;
+
+        /// <summary>
+        /// 成绩
+        /// </summary>
+        public int Score
+        {
+            get { return score; }
+            set { score = value; }
+        }
+
+        /// <summary>
+        /// 重试次数
+        /// </summary>
+        public int Retry
+		{
+			get { return retry; }
+			set { retry = value; }
+		}
 
 		/// <summary>
 		/// 冗余字段, EndTime - StartTime, 回答问题时花费时间

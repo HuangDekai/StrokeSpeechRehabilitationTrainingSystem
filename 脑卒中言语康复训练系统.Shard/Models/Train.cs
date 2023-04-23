@@ -11,18 +11,28 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private string name;
 		private int quantity;
 		private string content;
+		private string type;
 
-		/// <summary>
-		/// 训练内容
-		/// </summary>
-		public string Content
+        /// <summary>
+        /// 训练类型,用于打开Type + "View" 的页面
+        /// </summary>
+        public string Type
+        {
+            get { return type; }
+            set { type = value;}
+        }
+
+        /// <summary>
+        /// 训练内容
+        /// </summary>
+        public string Content
 		{
 			get { return content; }
 			set { content = value; }
 		}
 
 		/// <summary>
-		/// 训练题数
+		/// 冗余字段, 存放训练题数
 		/// </summary>
 		public int Qutantity
 		{

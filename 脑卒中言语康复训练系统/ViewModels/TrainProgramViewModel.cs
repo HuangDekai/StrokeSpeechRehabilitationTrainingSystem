@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
+using 脑卒中言语康复训练系统.Extensions;
+using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
 
@@ -15,15 +19,45 @@ namespace 脑卒中言语康复训练系统.ViewModels
 {
     public class TrainProgramViewModel : BindableBase
     {
-        TrainProgramViewModel(IDialogHostService dialogService) 
+        TrainProgramViewModel(IDialogHostService dialogService, IRegionManager regionManager) 
         {
             this.dialogService= dialogService;
+            this.regionManager = regionManager;
+            ToTrainCommand = new DelegateCommand<string>(ToTrain);
             GetTrains();
+        }
+
+        public DelegateCommand<string> ToTrainCommand { get; private set; }
+
+        private async void ToTrain(Object obj)
+        {
+            var isLogin = await LoginVerification();
+            if (!isLogin)
+            {
+                return;
+            }
+            var parameters = new DialogParameters();
+            parameters.Add("Name", obj.ToString());
+
+            var dialogResult = await dialogService.ShowDialog("TrainQuestionCoverView", parameters);
+            if (dialogResult != null && dialogResult.Result == ButtonResult.OK)
+            {
+                var TrainInfo = dialogResult.Parameters.GetValue<TrainRaise>("TrainInfo");
+                if (TrainInfo != null)
+                {
+                    var navigationParam = new NavigationParameters();
+                    navigationParam.Add("ExaminationInfo", TrainInfo);
+                    parameters.Add("createNewRegionInstance", true);
+                    string trainViewName = TrainInfo.Type + "View";
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(trainViewName, navigationParam);
+                }
+            }
         }
 
         #region 属性
         private static SqLiteHelper sqlHelper;
         private readonly IDialogHostService dialogService;
+        private readonly IRegionManager regionManager;
         private ObservableCollection<Train> trains;
         
         /// <summary>
