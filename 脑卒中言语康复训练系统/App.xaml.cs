@@ -54,6 +54,7 @@ namespace 脑卒中言语康复训练系统
             containerRegistry.RegisterForNavigation<ExaminationView, ExaminationViewModel>();
             containerRegistry.RegisterForNavigation<SystemSchemeView, SystemSchemeViewModel>();
             containerRegistry.RegisterForNavigation<UserSchemeView, UserSchemeViewModel>();
+            containerRegistry.RegisterForNavigation<TrainProgramView, TrainProgramViewModel>();
         }
     }
 }

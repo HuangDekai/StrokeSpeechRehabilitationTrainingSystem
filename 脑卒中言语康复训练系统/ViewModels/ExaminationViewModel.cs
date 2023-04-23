@@ -98,7 +98,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
             sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
         }
 
-
+        /// <summary>
+        /// 从数据库中获取存有的量表名称并赋值给 ExaminationLooks
+        /// </summary>
         private void GetExaminationLooks()
         {
             ExaminationLooks = new ObservableCollection<ExaminationLook>();
