@@ -10,6 +10,28 @@ namespace 脑卒中言语康复训练系统.Models
     {
         private string content;
         private string picture;
+        private int groupId;
+
+        /// <summary>
+        /// 分组Id, 用于给答案分类
+        /// </summary>
+        public int GroupId
+        {
+            get { return groupId; }
+            set { groupId = value; }
+        }
+
+        private bool isCorrect;
+
+        /// <summary>
+        /// 冗余字段,用于判断该答案是不是正确答案
+        /// </summary>
+        public bool IsCorrect
+        {
+            get { return isCorrect; }
+            set { isCorrect = value; }
+        }
+
 
         /// <summary>
         /// 图片相对地址

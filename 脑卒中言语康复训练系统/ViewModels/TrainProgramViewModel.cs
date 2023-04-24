@@ -46,7 +46,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 if (TrainInfo != null)
                 {
                     var navigationParam = new NavigationParameters();
-                    navigationParam.Add("ExaminationInfo", TrainInfo);
+                    navigationParam.Add("TrainInfo", TrainInfo);
                     parameters.Add("createNewRegionInstance", true);
                     string trainViewName = TrainInfo.Type + "View";
                     regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(trainViewName, navigationParam);

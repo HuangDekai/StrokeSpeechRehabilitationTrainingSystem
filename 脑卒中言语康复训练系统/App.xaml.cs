@@ -11,8 +11,10 @@ using System.Windows;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.ViewModels;
 using 脑卒中言语康复训练系统.ViewModels.Dialogs;
+using 脑卒中言语康复训练系统.ViewModels.Trains;
 using 脑卒中言语康复训练系统.Views;
 using 脑卒中言语康复训练系统.Views.Dialogs;
+using 脑卒中言语康复训练系统.Views.Trains;
 
 namespace 脑卒中言语康复训练系统
 {
@@ -56,6 +58,8 @@ namespace 脑卒中言语康复训练系统
             containerRegistry.RegisterForNavigation<SystemSchemeView, SystemSchemeViewModel>();
             containerRegistry.RegisterForNavigation<UserSchemeView, UserSchemeViewModel>();
             containerRegistry.RegisterForNavigation<TrainProgramView, TrainProgramViewModel>();
+
+            containerRegistry.RegisterForNavigation<WordPronunciationTrainView, WordPronunciationTrainViewModel>();
         }
     }
 }

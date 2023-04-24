@@ -11,6 +11,11 @@
     <None Remove="App.xaml.cs~RF364d6d61.TMP" />
     <None Remove="Image\Default.png" />
     <None Remove="Image\Kato.jpg" />
+    <None Remove="Image\医生.jpg" />
+    <None Remove="Image\教师.jpg" />
+    <None Remove="Image\消防员.jpg" />
+    <None Remove="Image\理发师.jpg" />
+    <None Remove="Image\警察.jpg" />
     <None Remove="ViewModels\Dialogs\g50anlks.roy~" />
     <None Remove="ViewModels\etqbqmg0.3um~" />
     <None Remove="ViewModels\p3mejvnj.lb2~" />
@@ -19,6 +24,8 @@
     <None Remove="ViewModels\tbzdnuby.r5l~" />
     <None Remove="ViewModels\TrainProgramViewModel.cs~RF9822f0f.TMP" />
     <None Remove="Views\Dialogs\QuestionItemView.xaml~RF354d81c1.TMP" />
+    <None Remove="Views\Trains\suiu3fdk.sgb~" />
+    <None Remove="Views\Trains\WordPronunciationTrainView.xaml~RFe01de1d.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +35,7 @@
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="RestSharp" Version="106.12.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
+    <PackageReference Include="System.Speech" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +51,11 @@
   <ItemGroup>
     <Resource Include="Image\Kato.jpg" />
     <Resource Include="Image\Default.png" />
+    <Resource Include="Image\医生.jpg" />
+    <Resource Include="Image\教师.jpg" />
+    <Resource Include="Image\消防员.jpg" />
+    <Resource Include="Image\理发师.jpg" />
+    <Resource Include="Image\警察.jpg" />
   </ItemGroup>
 
 </Project>

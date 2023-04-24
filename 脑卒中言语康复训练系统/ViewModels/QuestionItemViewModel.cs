@@ -194,7 +194,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         }
 
         /// <summary>
-        /// LastCommand 绑定方法, 下一个问题
+        /// NextCommand 绑定方法, 下一个问题
         /// </summary>
         private void Next()
         {
@@ -346,7 +346,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         }
 
         /// <summary>
-        /// 根据传入的 question 查找对应的 Option, 需要之前已经连接过数据库
+        /// 根据传入的 question 查找对应的 Option
         /// </summary>
         /// <param name="question">传入的 question 实体</param>
         /// <returns></returns>

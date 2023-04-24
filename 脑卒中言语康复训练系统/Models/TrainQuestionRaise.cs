@@ -13,6 +13,7 @@ namespace 脑卒中言语康复训练系统.Models
         private string content;
         private int quantity;
         private int correctAnswerId;
+        private AnswerRaise correctAnswer;
         private ObservableCollection<AnswerRaise> answers;
 
         /// <summary>
@@ -22,6 +23,15 @@ namespace 脑卒中言语康复训练系统.Models
         {
             get { return answers; }
             set { answers = value; RaisePropertyChanged(); }
+        }
+
+        /// <summary>
+        /// 冗余字段,用于存储正确的答案
+        /// </summary>
+        public AnswerRaise CorrectAnswer
+        {
+            get { return correctAnswer; }
+            set { correctAnswer = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
