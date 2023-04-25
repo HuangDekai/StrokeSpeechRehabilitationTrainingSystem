@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using 脑卒中言语康复训练系统.Common;
@@ -25,8 +27,8 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             this.regionManager= regionManager;
 
             CancelCommand = new DelegateCommand(Cancel);
-            NextCommand = new DelegateCommand(Next);
-            ReplayCommand = new DelegateCommand(Replay);
+            NextCommand = new DelegateCommand(NextButtonFuc);
+            ReplayCommand = new DelegateCommand(ReplayButtonFuc);
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
         }
 
@@ -35,7 +37,17 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public DelegateCommand ReplayCommand { get; set; }
 
         /// <summary>
-        /// ReplayCommand 绑定方法, 重播该问题
+        /// ReplayCommand 绑定方法, 点击按钮重播该问题
+        /// </summary>
+        private void ReplayButtonFuc()
+        {
+            recognitionEngine.RecognizeAsyncStop();
+            isNext = false;
+            isRecognized = true;
+        }
+
+        /// <summary>
+        /// 重播该问题
         /// </summary>
         private void Replay()
         {
@@ -44,7 +56,17 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         }
 
         /// <summary>
-        /// NextCommand 绑定方法, 下一个问题
+        /// NextCommand 绑定方法, 点击按钮进入下一个问题
+        /// </summary>
+        private void NextButtonFuc()
+        {
+            recognitionEngine.RecognizeAsyncStop();
+            isNext = true;
+            isRecognized = true;
+        }
+
+        /// <summary>
+        /// 进入下一个问题
         /// </summary>
         private void Next()
         {
@@ -64,6 +86,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Cancel()
         {
+            recognitionEngine.RecognizeAsyncStop();
             if (journal.CanGoBack)
             {
                 journal.GoBack();
@@ -97,6 +120,8 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private int maxItemIndex;
         private int isBtnGroupShow = 1;
         private string speechResult;
+        private bool isNext = false;
+        private bool isRecognized = false;
 
         /// <summary>
         /// 用于存放语音识别结果
@@ -173,6 +198,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <param name="navigationContext"></param>
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            recognitionEngine.RecognizeAsyncStop();
         }
 
         /// <summary>
@@ -320,14 +346,18 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             //grammarbuilder封装对象
             Grammar grm = new Grammar(gb);
             recognitionEngine.LoadGrammarAsync(grm);
+            //设置过期时间
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(20);
             //创建语音接收事件
             recognitionEngine.SpeechRecognized += (s, e) => {
+                isRecognized = true;
                 if (e.Result.Confidence >= 0.5)
                 {
                     SpeechResult = e.Result.Text;
                     if (SpeechResult.Equals(CurrQuestion.CorrectAnswer.Content))
                     {
                         CorrectAnwer();
+                        isNext = true;
                     } else
                     {
                         ErrorAnwer();
@@ -336,6 +366,28 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 else
                 {
                     RecognitionFailed();
+                }
+            };
+            recognitionEngine.AudioStateChanged += (s, e) =>
+            {
+                //Timeout
+                if (e.AudioState == AudioState.Stopped && !isNext && !isRecognized)
+                {
+                    RecognitionFailed();
+                    Replay();
+                }
+                //识别失败情况
+                else if (e.AudioState == AudioState.Stopped && !isNext)
+                {
+                    Replay();
+                    isRecognized = false;
+                }
+                //识别成功
+                else if (e.AudioState == AudioState.Stopped && isNext)
+                {
+                    Next();
+                    isNext = false;
+                    isRecognized = false;
                 }
             };
             //音频输入
@@ -350,7 +402,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             synthesizer.Rate = 1;
             synthesizer.Speak("识别失败,请重试");
             synthesizer.Rate = 0;
-            Replay();
         }
 
         /// <summary>
@@ -361,7 +412,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             synthesizer.Rate = 1;
             synthesizer.Speak("答对了");
             synthesizer.Rate = 0;
-            Next();
         }
 
         /// <summary>
@@ -372,7 +422,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             synthesizer.Rate = 1;
             synthesizer.Speak("回答错误,再来一次");
             synthesizer.Rate = 0;
-            Replay();
         }
 
         /// <summary>
