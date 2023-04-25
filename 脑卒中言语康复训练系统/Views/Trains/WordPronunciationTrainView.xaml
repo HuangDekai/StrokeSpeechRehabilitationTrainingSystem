@@ -117,6 +117,32 @@
                                     Text="下  一  题" />
                             </StackPanel>
                         </Button>
+                        <Button
+                            Width="150"
+                            Height="40"
+                            Margin="0,25,0,0"
+                            Background="#1eca3a"
+                            BorderBrush="#1eca3a"
+                            Command="{Binding NextCommand}"
+                            DockPanel.Dock="Right">
+                            <StackPanel
+                                Width="127"
+                                Height="24"
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Margin="0,2,10,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Kind="BorderColor" />
+                                <TextBlock
+                                    Width="95"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    Text="提       交" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Border>
             </Canvas>

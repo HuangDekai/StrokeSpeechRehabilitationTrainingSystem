@@ -31,12 +31,24 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             CancelCommand = new DelegateCommand(Cancel);
             NextCommand = new DelegateCommand(NextButtonFuc);
             ReplayCommand = new DelegateCommand(ReplayButtonFuc);
+            CommitCommand = new DelegateCommand(Commit);
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
         }
 
         public DelegateCommand CancelCommand { get; set; }
         public DelegateCommand NextCommand { get; set; }
         public DelegateCommand ReplayCommand { get; set; }
+        public DelegateCommand CommitCommand { get; set; }
+
+        /// <summary>
+        /// CommitCommand 绑定方法, 点击按钮提交问卷,使用Cancel()离开页面
+        /// </summary>
+        private void Commit()
+        {
+            CurrTrainRecord.EndTime = DateTime.Now;
+            InsertTrainRecord();
+            Cancel();
+        }
 
         /// <summary>
         /// ReplayCommand 绑定方法, 点击按钮重播该问题
@@ -219,9 +231,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         {
             isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
-            var trainRecord = CurrTrainRecord;
-            CurrTrainRecord.EndTime = DateTime.Now;
-            InsertTrainRecord();
         }
 
         /// <summary>
