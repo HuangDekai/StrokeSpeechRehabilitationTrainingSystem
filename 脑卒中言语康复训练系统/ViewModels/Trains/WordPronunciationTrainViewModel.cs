@@ -43,6 +43,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void ReplayButtonFuc()
         {
+            
             recognitionEngine.RecognizeAsyncStop();
             isNext = false;
             isRecognized = true;
@@ -53,6 +54,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Replay()
         {
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Retry ++;
             recognitionEngine.RecognizeAsyncStop();
             synthesizer.SpeakAsync(CurrQuestion.Content);
         }
@@ -62,6 +64,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void NextButtonFuc()
         {
+            isClickNext = true;
             recognitionEngine.RecognizeAsyncStop();
             isNext = true;
             isRecognized = true;
@@ -103,6 +106,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
 
             IsBtnGroupShow = 0;
             synthesizer.Speak("请回答");
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime= DateTime.Now;
             recognitionEngine.RecognizeAsync(RecognizeMode.Single);
         }
 
@@ -125,6 +129,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private bool isNext = false;
         private bool isRecognized = false;
         private bool isLeave = false;
+        private bool isClickNext = false;
         private TrainRecordRaise currTrainRecord;
 
         /// <summary>
@@ -214,6 +219,9 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         {
             isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
+            var trainRecord = CurrTrainRecord;
+            CurrTrainRecord.EndTime = DateTime.Now;
+            InsertTrainRecord();
         }
 
         /// <summary>
@@ -243,6 +251,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             }
         }
 
+        #region 数据库操作
         /// <summary>
         /// 获取SQLite Connection
         /// </summary>
@@ -299,7 +308,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private ObservableCollection<AnswerRaise> GetAnswers(TrainQuestionRaise trainQuestion)
         {
             GetConnetion();
-            
+
             string sql = "select * from Answer where Id = " + trainQuestion.CorrectAnswerId;
             var reader = sqlHelper.ExecuteQuery(sql);
             ObservableCollection<AnswerRaise> answers = new ObservableCollection<AnswerRaise>();
@@ -315,7 +324,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                     CreateTime = Convert.ToDateTime(reader.GetString(reader.GetOrdinal("CreateTime"))),
                     UpdateTime = Convert.ToDateTime(reader.GetString(reader.GetOrdinal("UpdateTime"))),
                 };
-                
+
                 answers.Add(answerRaise);
             }
             reader.Close();
@@ -345,6 +354,53 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         }
 
         /// <summary>
+        /// 根据 CurrTrainRecord 插入训练记录
+        /// </summary>
+        private void InsertTrainRecord()
+        {
+            GetConnetion();
+            DateTime dateTime = DateTime.Now;
+            
+            string sql = "INSERT INTO TrainRecord(UserId,TrainId,StartTime,EndTime,CreateTime,UpdateTime) VALUES (" +
+                CurrTrainRecord.UserId + "," +
+                CurrTrainRecord.TrainId + "," +
+                "'" + CurrTrainRecord.StartTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + CurrTrainRecord.EndTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'" +
+                ")";
+            sqlHelper.ExecuteQuery(sql);
+
+            sql = "SELECT * FROM TrainRecord WHERE UserId = " + CurrTrainRecord.UserId + " AND TrainId = " + CurrTrainRecord.TrainId + " ORDER BY id DESC LIMIT 1";
+            var reader = sqlHelper.ExecuteQuery(sql);
+            if (reader.Read())
+            {
+                var trainRecordId = reader.GetInt32(reader.GetOrdinal("Id"));
+                reader.Close();
+
+                foreach (var record in CurrTrainRecord.TrainQuestionRecords)
+                {
+                    sql = "INSERT INTO TrainQuestionRecord(TrainQuestionId,TrainRecordId,Retry,Score,StartTime,EndTime,CreateTime,UpdateTime) VALUES (" +
+                    record.Id + "," +
+                    trainRecordId + "," +
+                    record.Retry + "," +
+                    record.Score + "," +
+                    "'" + record.StartTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                    "'" + record.EndTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                    "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                    "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'" +
+                    ")";
+                    sqlHelper.ExecuteQuery(sql);
+                }
+                
+            }
+
+            sqlHelper.CloseConnection();
+        }
+        #endregion
+
+
+        /// <summary>
         /// 初始化TTS引擎,根据trainRaise限定词语保证识别率
         /// </summary>
         /// <param name="trainRaise">带有回答内容的TrainRaise</param>
@@ -371,7 +427,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             Grammar grm = new Grammar(gb);
             recognitionEngine.LoadGrammarAsync(grm);
             //设置过期时间
-            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(1);
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(20);
             //创建语音接收事件
             recognitionEngine.SpeechRecognized += (s, e) => {
                 isRecognized = true;
@@ -414,9 +470,12 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 //识别成功
                 else if (e.AudioState == AudioState.Stopped && isNext)
                 {
+                    CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Score = isClickNext ? 0 : 1;
+                    CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].EndTime = DateTime.Now;
                     Next();
                     isNext = false;
                     isRecognized = false;
+                    isClickNext = false;
                 }
             };
             //音频输入
@@ -503,6 +562,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             {
                 TrainId = trainInfo.Id,
                 UserId = LoginVerificationTool.GetLoginUserId(),
+                StartTime = DateTime.Now,
                 TrainQuestionRecords = new ObservableCollection<TrainQuestionRecordRaise>()
             };
             foreach (var question in trainInfo.TrainQuestions)
@@ -510,7 +570,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 var questionRecord = new TrainQuestionRecordRaise
                 {
                     TrainQuestionId = question.Id,
-                    TrainRecordId = trainInfo.Id
                 };
                 tarinRecord.TrainQuestionRecords.Add(questionRecord);
             }
