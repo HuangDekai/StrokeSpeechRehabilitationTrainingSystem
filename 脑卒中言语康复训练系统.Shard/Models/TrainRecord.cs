@@ -12,6 +12,7 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private string content;
 		private TimeSpan cost;
 		private int userId;
+		private int trainId;
         private DateTime startTime;
         private DateTime endTime;
 		private int sort;
@@ -54,12 +55,19 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 			set { userId = value; }
 		}
 
+        /// <summary>
+        /// 训练ID
+        /// </summary>
+        public int TrainId
+        {
+            get { return trainId; }
+            set { trainId = value; }
+        }
 
-
-		/// <summary>
-		/// 训练时间,冗余字段,需要结束时间-开始时间
-		/// </summary>
-		public TimeSpan Cost
+        /// <summary>
+        /// 训练时间,冗余字段,需要结束时间-开始时间
+        /// </summary>
+        public TimeSpan Cost
 		{
 			get { return cost; }
 			set { cost = value; }

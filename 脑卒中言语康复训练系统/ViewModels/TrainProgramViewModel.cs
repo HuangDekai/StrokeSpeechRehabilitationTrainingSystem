@@ -47,7 +47,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 {
                     var navigationParam = new NavigationParameters();
                     navigationParam.Add("TrainInfo", TrainInfo);
-                    parameters.Add("createNewRegionInstance", true);
+                    navigationParam.Add("KeepAlive", false);
                     string trainViewName = TrainInfo.Type + "View";
                     regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(trainViewName, navigationParam);
                 }
@@ -81,7 +81,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             {
                 var parameters = new DialogParameters();
                 parameters.Add("Title", "温馨提示");
-                parameters.Add("Message", "请先登录再进行量表测评!");
+                parameters.Add("Message", "请先登录再进行训练!");
                 await dialogService.ShowDialog("MessageBoxView", parameters);
                 isSuccess = false;
             }

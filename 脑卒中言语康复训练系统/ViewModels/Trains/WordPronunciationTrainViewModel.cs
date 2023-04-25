@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
@@ -122,6 +124,18 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private string speechResult;
         private bool isNext = false;
         private bool isRecognized = false;
+        private bool isLeave = false;
+        private TrainRecordRaise currTrainRecord;
+
+        /// <summary>
+        /// 用于存放训练记录
+        /// </summary>
+        public TrainRecordRaise CurrTrainRecord
+        {
+            get { return currTrainRecord; }
+            set { currTrainRecord = value; RaisePropertyChanged(); }
+        }
+
 
         /// <summary>
         /// 用于存放语音识别结果
@@ -198,6 +212,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <param name="navigationContext"></param>
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
         }
 
@@ -205,15 +220,24 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// 在导航到页面时被调用
         /// </summary>
         /// <param name="navigationContext">传入的内容</param>
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (navigationContext.Parameters.ContainsKey("TrainInfo"))
             {
                 journal = navigationContext.NavigationService.Journal;
                 TrainInfo = navigationContext.Parameters.GetValue<TrainRaise>("TrainInfo");
                 MaxItemIndex = navigationContext.Parameters.ContainsKey("MaxItemIndex") ? navigationContext.Parameters.GetValue<int>("MaxItemIndex") : 5;
+
+                //如果未登录,调用返回方法返回之前界面
+                var isLogin = await LoginVerification();
+                if (!isLogin)
+                {
+                    Cancel();
+                }
+
                 GetTrainQuestions();
                 CurrQuestion = TrainInfo.TrainQuestions[0];
+                CurrTrainRecord = initTrainRecord(TrainInfo);
                 InitSpeechRecognitionEngine(TrainInfo);
                 synthesizer.SpeakAsync(CurrQuestion.Content);
             }
@@ -347,7 +371,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             Grammar grm = new Grammar(gb);
             recognitionEngine.LoadGrammarAsync(grm);
             //设置过期时间
-            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(20);
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(1);
             //创建语音接收事件
             recognitionEngine.SpeechRecognized += (s, e) => {
                 isRecognized = true;
@@ -370,8 +394,13 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             };
             recognitionEngine.AudioStateChanged += (s, e) =>
             {
+                //离开页面
+                if (isLeave)
+                {
+                    
+                }
                 //Timeout
-                if (e.AudioState == AudioState.Stopped && !isNext && !isRecognized)
+                else if (e.AudioState == AudioState.Stopped && !isNext && !isRecognized)
                 {
                     RecognitionFailed();
                     Replay();
@@ -441,5 +470,52 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             }
         }
 
+        #region 登录校验
+        /// <summary>
+        /// 用于判断是否登录了,若未登录,进行拦截
+        /// </summary>
+        /// <returns>登录(true)/未登录(false)</returns>
+        private async Task<bool> LoginVerification()
+        {
+            bool isSuccess = true;
+            if (!LoginVerificationTool.IsLogin())
+            {
+                var parameters = new DialogParameters();
+                parameters.Add("Title", "温馨提示");
+                parameters.Add("Message", "请先登录再进行训练!");
+                await dialogService.ShowDialog("MessageBoxView", parameters);
+                isSuccess = false;
+            }
+            return isSuccess;
+        }
+        #endregion
+
+        #region 训练记录相关
+        /// <summary>
+        /// 初始化训练记录
+        /// </summary>
+        /// <param name="trainInfo">初始化好的训练信息</param>
+        /// <returns>初始化好的训练记录</returns>
+        private TrainRecordRaise initTrainRecord(TrainRaise trainInfo)
+        {
+            
+            var tarinRecord = new TrainRecordRaise
+            {
+                TrainId = trainInfo.Id,
+                UserId = LoginVerificationTool.GetLoginUserId(),
+                TrainQuestionRecords = new ObservableCollection<TrainQuestionRecordRaise>()
+            };
+            foreach (var question in trainInfo.TrainQuestions)
+            {
+                var questionRecord = new TrainQuestionRecordRaise
+                {
+                    TrainQuestionId = question.Id,
+                    TrainRecordId = trainInfo.Id
+                };
+                tarinRecord.TrainQuestionRecords.Add(questionRecord);
+            }
+            return tarinRecord;
+        }
+        #endregion
     }
 }
