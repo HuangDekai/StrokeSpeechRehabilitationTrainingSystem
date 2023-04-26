@@ -50,6 +50,7 @@ namespace 脑卒中言语康复训练系统
             containerRegistry.RegisterForNavigation<QuestionCoverView, QuestionCoverViewModel>();
             containerRegistry.RegisterForNavigation<QuestionItemView, QuestionItemViewModel>();
             containerRegistry.RegisterForNavigation<TrainQuestionCoverView, TrainQuestionCoverViewModel>();
+            containerRegistry.RegisterForNavigation<MessageBoxOnlySureView, MessageBoxOnlySureViewModel>();
 
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();

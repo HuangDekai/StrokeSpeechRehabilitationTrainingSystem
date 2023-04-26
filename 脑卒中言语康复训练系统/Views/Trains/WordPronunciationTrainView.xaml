@@ -35,7 +35,7 @@
                 Style="{StaticResource MaterialDesignOutlinedLightButton}" />
             <Button
                 Margin="0,5,10,5"
-                Command="{Binding CancelCommand}"
+                Command="{Binding PauseCommand}"
                 Content="暂停"
                 DockPanel.Dock="Right" />
         </DockPanel>
@@ -98,7 +98,8 @@
                             Background="#ff7d24"
                             BorderBrush="#ff7d24"
                             Command="{Binding NextCommand}"
-                            DockPanel.Dock="Right">
+                            DockPanel.Dock="Right"
+                            Visibility="{Binding IsNextShow, Converter={StaticResource IsShowConverter}}">
                             <StackPanel
                                 Width="127"
                                 Height="24"
@@ -123,8 +124,9 @@
                             Margin="0,25,0,0"
                             Background="#1eca3a"
                             BorderBrush="#1eca3a"
-                            Command="{Binding NextCommand}"
-                            DockPanel.Dock="Right">
+                            Command="{Binding CommitCommand}"
+                            DockPanel.Dock="Right"
+                            Visibility="{Binding IsCommitShow, Converter={StaticResource IsShowConverter}}">
                             <StackPanel
                                 Width="127"
                                 Height="24"

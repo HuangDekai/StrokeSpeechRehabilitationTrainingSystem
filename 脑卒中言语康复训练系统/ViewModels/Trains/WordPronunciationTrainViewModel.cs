@@ -32,6 +32,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             NextCommand = new DelegateCommand(NextButtonFuc);
             ReplayCommand = new DelegateCommand(ReplayButtonFuc);
             CommitCommand = new DelegateCommand(Commit);
+            PauseCommand = new DelegateCommand(Pause);
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
         }
 
@@ -39,15 +40,41 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public DelegateCommand NextCommand { get; set; }
         public DelegateCommand ReplayCommand { get; set; }
         public DelegateCommand CommitCommand { get; set; }
+        public DelegateCommand PauseCommand { get; set; }
+
+        /// <summary>
+        /// PauseCommand 绑定方法, 暂停
+        /// </summary>
+        private async void Pause()
+        {
+            isClickPause = true;
+            recognitionEngine.RecognizeAsyncStop();
+            synthesizer.SpeakAsyncCancelAll();
+            var parameters = new DialogParameters();
+            parameters.Add("Title", "暂停中");
+            parameters.Add("Message", "正在暂停中,是否开始答题?");
+            parameters.Add("ButtonText", "开始");
+            var res = await dialogService.ShowDialog("MessageBoxOnlySureView", parameters);
+            IsBtnGroupShow = 0;
+            isClickPause = false;
+            Replay();
+        }
 
         /// <summary>
         /// CommitCommand 绑定方法, 点击按钮提交问卷,使用Cancel()离开页面
         /// </summary>
-        private void Commit()
+        private async void Commit()
         {
             CurrTrainRecord.EndTime = DateTime.Now;
-            InsertTrainRecord();
-            Cancel();
+            var parameters = new DialogParameters();
+            parameters.Add("Title", "温馨提示");
+            parameters.Add("Message", "是否确认完成答题?");
+            var res = await dialogService.ShowDialog("MessageBoxView", parameters);
+            if (res.Result == ButtonResult.OK)
+            {
+                InsertTrainRecord();
+                Cancel();
+            }
         }
 
         /// <summary>
@@ -55,7 +82,6 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void ReplayButtonFuc()
         {
-            
             recognitionEngine.RecognizeAsyncStop();
             isNext = false;
             isRecognized = true;
@@ -92,6 +118,11 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 CurrItemIndex++;
                 CurrQuestion = TrainInfo.TrainQuestions[CurrItemIndex - 1];
                 IsBtnGroupShow = 1;
+                if (CurrItemIndex == MaxItemIndex)
+                {
+                    IsNextShow = 2;
+                    IsCommitShow = 0;
+                }
                 recognitionEngine.RecognizeAsyncStop();
                 synthesizer.SpeakAsync(CurrQuestion.Content);
             }
@@ -115,11 +146,13 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
-
-            IsBtnGroupShow = 0;
-            synthesizer.Speak("请回答");
-            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime= DateTime.Now;
-            recognitionEngine.RecognizeAsync(RecognizeMode.Single);
+            if (!isLeave && !isClickPause)
+            {
+                IsBtnGroupShow = 0;
+                synthesizer.Speak("请回答");
+                CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime = DateTime.Now;
+                recognitionEngine.RecognizeAsync(RecognizeMode.Single);
+            }
         }
 
         #region 属性
@@ -142,6 +175,29 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private bool isRecognized = false;
         private bool isLeave = false;
         private bool isClickNext = false;
+        private bool isClickPause = false;
+        private int isNextShow;
+        private int isCommitShow = 2;
+
+        /// <summary>
+        /// 用于控制提交按钮是否显示,0-展示,1-隐藏但占位,2-隐藏且不占位, 默认2
+        /// </summary>
+        public int IsCommitShow
+        {
+            get { return isCommitShow; }
+            set { isCommitShow = value; RaisePropertyChanged(); }
+        }
+
+
+        /// <summary>
+        /// 用于控制下一题按钮是否显示,0-展示,1-隐藏但占位,2-隐藏且不占位
+        /// </summary>
+        public int IsNextShow
+        {
+            get { return isNextShow; }
+            set { isNextShow = value; RaisePropertyChanged(); }
+        }
+
         private TrainRecordRaise currTrainRecord;
 
         /// <summary>
@@ -231,6 +287,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         {
             isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
+            synthesizer.SpeakAsyncCancelAll();
         }
 
         /// <summary>
@@ -464,6 +521,11 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 {
                     
                 }
+                //点击暂停
+                else if (isClickPause)
+                {
+
+                }
                 //Timeout
                 else if (e.AudioState == AudioState.Stopped && !isNext && !isRecognized)
                 {
@@ -481,10 +543,18 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 {
                     CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Score = isClickNext ? 0 : 1;
                     CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].EndTime = DateTime.Now;
-                    Next();
-                    isNext = false;
-                    isRecognized = false;
-                    isClickNext = false;
+                    //如果是最后一题答对了
+                    if (CurrItemIndex >= MaxItemIndex)
+                    {
+                        Commit();
+                    }
+                    else
+                    {
+                        Next();
+                        isNext = false;
+                        isRecognized = false;
+                        isClickNext = false;
+                    }
                 }
             };
             //音频输入
