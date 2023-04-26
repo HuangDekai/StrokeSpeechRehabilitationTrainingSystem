@@ -26,11 +26,13 @@
     <None Remove="ViewModels\Trains\iqjpyq5i.jcw~" />
     <None Remove="ViewModels\Trains\WordPronunciationTrainViewModel.cs~RF13d04ab6.TMP" />
     <None Remove="Views\Dialogs\QuestionItemView.xaml~RF354d81c1.TMP" />
+    <None Remove="Views\ee2fijec.oae~" />
     <None Remove="Views\Trains\suiu3fdk.sgb~" />
     <None Remove="Views\Trains\WordPronunciationTrainView.xaml~RFe01de1d.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.701" />
     <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />

@@ -70,7 +70,7 @@ namespace 脑卒中言语康复训练系统.Common.Tools
                 GetConnetion();
                 string sql = "select *  from UserInfo Where Id = " + id;
                 var reader = sqlHelper.ExecuteQuery(sql);
-                if(reader != null)
+                if(reader.Read())
                 {
                     userInfo = new UserInfo()
                     {

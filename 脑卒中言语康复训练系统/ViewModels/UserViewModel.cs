@@ -28,6 +28,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         {
             UserLoginCommand = new DelegateCommand<string>(UserLogin);
             UserLogoutCommand = new DelegateCommand(UserLogout);
+            SelectTrainRecordCommand = new DelegateCommand<object>(SelectTrainRecord);
             this.dialogService = dialogService;
         }
 
@@ -40,6 +41,17 @@ namespace 脑卒中言语康复训练系统.ViewModels
             string name = AppDomain.CurrentDomain.BaseDirectory;
             string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
             sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+        }
+
+        /// <summary>
+        /// 点击训练记录里的详情按钮绑定的方法
+        /// </summary>
+        /// <param name="obj">对应行的记录</param>
+        private void SelectTrainRecord(object obj)
+        {
+            var param = new DialogParameters();
+            param.Add("TrainRecordId", ((TrainRecord)obj).Id);
+            dialogService.ShowDialog("ResultChartView",param);
         }
 
         /// <summary>
@@ -333,8 +345,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         #endregion
 
         public DelegateCommand<string> UserLoginCommand { get; private set; }
-
         public DelegateCommand UserLogoutCommand { get; private set; }
-
+        public DelegateCommand<object> SelectTrainRecordCommand { get; private set; }
     }
 }

@@ -314,6 +314,7 @@
                         Text="训练记录" />
                 </DockPanel>
                 <DataGrid
+                    x:Name="UserTrainRecordDataGrid"
                     Margin="15,0"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
@@ -384,6 +385,8 @@
                                 <DataTemplate>
                                     <Button
                                         VerticalAlignment="Top"
+                                        Command="{Binding DataContext.SelectTrainRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding}"
                                         Content="详情"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource MaterialDesignFlatLightButton}"

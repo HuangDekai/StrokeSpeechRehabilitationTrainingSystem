@@ -22,7 +22,7 @@ namespace 脑卒中言语康复训练系统.Models
         public int Score
         {
             get { return score; }
-            set { score = value; }
+            set { score = value; RaisePropertyChanged(); }
         }
 
 
@@ -32,7 +32,7 @@ namespace 脑卒中言语康复训练系统.Models
         public int Retry
         {
             get { return retry; }
-            set { retry = value; }
+            set { retry = value; RaisePropertyChanged(); }
         }
 
         /// <summary>

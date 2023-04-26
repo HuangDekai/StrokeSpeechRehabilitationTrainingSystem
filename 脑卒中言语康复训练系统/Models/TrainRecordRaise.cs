@@ -25,7 +25,7 @@ namespace 脑卒中言语康复训练系统.Models
         public ObservableCollection<TrainQuestionRecordRaise> TrainQuestionRecords
         {
             get { return trainQuestionRecords; }
-            set { trainQuestionRecords = value; }
+            set { trainQuestionRecords = value; RaisePropertyChanged(); }
         }
 
 
@@ -35,7 +35,7 @@ namespace 脑卒中言语康复训练系统.Models
         public int Sort
         {
             get { return sort; }
-            set { sort = value; }
+            set { sort = value; RaisePropertyChanged(); }
         }
 
 
@@ -45,7 +45,7 @@ namespace 脑卒中言语康复训练系统.Models
         public DateTime StartTime
         {
             get { return startTime; }
-            set { startTime = value; }
+            set { startTime = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace 脑卒中言语康复训练系统.Models
         public DateTime EndTime
         {
             get { return endTime; }
-            set { endTime = value; }
+            set { endTime = value; RaisePropertyChanged(); }
         }
 
 
@@ -64,7 +64,7 @@ namespace 脑卒中言语康复训练系统.Models
         public int UserId
         {
             get { return userId; }
-            set { userId = value; }
+            set { userId = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace 脑卒中言语康复训练系统.Models
         public int TrainId
         {
             get { return trainId; }
-            set { trainId = value; }
+            set { trainId = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace 脑卒中言语康复训练系统.Models
         public TimeSpan Cost
         {
             get { return cost; }
-            set { cost = value; }
+            set { cost = value; RaisePropertyChanged(); }
         }
 
 
@@ -92,7 +92,7 @@ namespace 脑卒中言语康复训练系统.Models
         public string Content
         {
             get { return content; }
-            set { content = value; }
+            set { content = value; RaisePropertyChanged(); }
         }
 
 
@@ -102,7 +102,7 @@ namespace 脑卒中言语康复训练系统.Models
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set { name = value; RaisePropertyChanged(); }
         }
     }
 }
