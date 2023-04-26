@@ -288,6 +288,10 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
             synthesizer.SpeakAsyncCancelAll();
+
+            var param = new DialogParameters();
+            param.Add("TrainRecordId", CurrTrainRecord.Id);
+            dialogService.ShowDialog("ResultChartView", param);
         }
 
         /// <summary>
@@ -442,6 +446,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (reader.Read())
             {
                 var trainRecordId = reader.GetInt32(reader.GetOrdinal("Id"));
+                CurrTrainRecord.Id= trainRecordId;
                 reader.Close();
 
                 foreach (var record in CurrTrainRecord.TrainQuestionRecords)
