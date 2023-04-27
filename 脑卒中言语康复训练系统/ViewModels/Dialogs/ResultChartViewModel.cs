@@ -30,6 +30,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             CancelCommand = new DelegateCommand(Cancel);
             UserInfo = LoginVerificationTool.GetLoginUserInfo();
         }
+
         #region 属性
         private static SqLiteHelper sqlHelper;
         private UserInfo userInfo;

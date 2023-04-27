@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,17 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private DateTime endTime;
         private int sort;
 		private int examinationId;
+		private ObservableCollection<QuestionRecord> questionRecords;
+
+		/// <summary>
+		/// 冗余字段,存储各个的问题记录
+		/// </summary>
+		public ObservableCollection<QuestionRecord> QuestionRecords
+        {
+			get { return questionRecords; }
+			set { questionRecords = value; }
+		}
+
 
 		/// <summary>
 		/// 对应的问卷的Id

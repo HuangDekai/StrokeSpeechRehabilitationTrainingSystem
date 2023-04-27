@@ -491,6 +491,8 @@
                                 <DataTemplate>
                                     <Button
                                         VerticalAlignment="Top"
+                                        Command="{Binding DataContext.SelectExaminationRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding}"
                                         Content="详情"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource MaterialDesignFlatLightButton}"

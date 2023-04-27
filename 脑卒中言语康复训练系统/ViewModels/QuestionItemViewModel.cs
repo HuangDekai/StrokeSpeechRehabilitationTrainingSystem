@@ -32,9 +32,6 @@ namespace 脑卒中言语康复训练系统.ViewModels
             SelectCommand = new DelegateCommand<OptionRaise>(Select);
             ItemSelectCommand = new DelegateCommand<QuestionRaise>(ItemSelect);
             CommitCommand = new DelegateCommand(Commit);
-
-            record = new ExaminationRecord();
-            record.StartTime= DateTime.Now;
         }
 
         #region 属性
@@ -55,7 +52,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         public ExaminationRecord Record
         {
             get { return record; }
-            set { record = value; }
+            set { record = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         public ExaminationRaise ExaminationRaise
         {
             get { return examinationRaise; }
-            set { examinationRaise = value; }
+            set { examinationRaise = value; RaisePropertyChanged(); }
         }
 
         #endregion
@@ -132,7 +129,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
 
             if (result != null && result.Result == ButtonResult.OK)
             {
-                InsertExaminationRecord(record);
+                InsertExaminationRecord(Record);
                 regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ExaminationView");
             }
         }
@@ -158,12 +155,14 @@ namespace 脑卒中言语康复训练系统.ViewModels
             {
                 CurrQuestion.Select = optionSelected;
                 CurrQuestion.Select.IsChecked = true;
+                Record.QuestionRecords[CurrQuestionIndex].OptionId = optionSelected.Id;
                 Next();
             }
             else
             {
                 CurrQuestion.Select = optionSelected;
                 CurrQuestion.Select.IsChecked = true;
+                Record.QuestionRecords[CurrQuestionIndex].OptionId = optionSelected.Id;
             }
         }
 
@@ -198,7 +197,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         /// </summary>
         private void Next()
         {
-            if (CurrQuestionIndex < examinationRaise.Quantity - 1)
+            if (CurrQuestionIndex < ExaminationRaise.Quantity - 1)
             {
                 CurrQuestion.IsCurrSelect = false;
                 CurrQuestionIndex ++;
@@ -245,7 +244,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             {
                 journal = navigationContext.NavigationService.Journal;
                 var ExaminationInfo = navigationContext.Parameters.GetValue<Examination>("ExaminationInfo");
-                examinationRaise = new ExaminationRaise() { 
+                ExaminationRaise = new ExaminationRaise() { 
                     Id = ExaminationInfo.Id, 
                     Name = ExaminationInfo.Name,
                     Content= ExaminationInfo.Content,
@@ -256,7 +255,8 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 };
                 GetQuestionList(ExaminationInfo);
                 CurrQuestion = examinationRaise.Questions[CurrQuestionIndex];
-                
+                InitExaminationRecord(ExaminationRaise);
+
                 //如果未登录,调用返回方法返回之前界面
                 var isLogin = await LoginVerification();
                 if (!isLogin)
@@ -283,6 +283,26 @@ namespace 脑卒中言语康复训练系统.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
            
+        }
+
+        /// <summary>
+        /// 初始化问卷记录
+        /// </summary>
+        /// <param name="examinationRaise"></param>
+        private void InitExaminationRecord(ExaminationRaise examinationRaise)
+        {
+            var time = DateTime.Now;
+            Record = new ExaminationRecord();
+            Record.StartTime = time;
+            Record.QuestionRecords = new ObservableCollection<QuestionRecord>();
+            foreach (var item in examinationRaise.Questions)
+            {
+                var record = new QuestionRecord()
+                {
+                    QuestionId = item.Id,
+                };
+                Record.QuestionRecords.Add(record);
+            }
         }
 
         /// <summary>
@@ -388,6 +408,28 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 "'" + examinationRecord.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'" 
                 + ")";
             sqlHelper.ExecuteQuery(sql);
+
+            sql = "SELECT * FROM ExaminationRecord WHERE UserId = " + examinationRecord.UserId + " AND ExaminationId = " + examinationRecord.ExaminationId;
+            var reader = sqlHelper.ExecuteQuery(sql);
+            if (reader.Read())
+            {
+                examinationRecord.Id = reader.GetInt32(reader.GetOrdinal("Id"));
+            }
+            reader.Close();
+
+            foreach (var item in examinationRecord.QuestionRecords)
+            {
+                sql = "INSERT INTO QuestionRecord(QuestionId, ExaminationRecordId, OptionId, CreateTime, UpdateTime) Values (" +
+                    item.QuestionId + ","+
+                    examinationRecord.Id + "," +
+                    item.OptionId + "," +
+                    "'" + examinationRecord.CreateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'," +
+                    "'" + examinationRecord.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'"
+                    + ")";
+                sqlHelper.ExecuteQuery(sql);
+            }
+
+
             sqlHelper.CloseConnection();
         }
     }
