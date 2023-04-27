@@ -51,7 +51,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
         private void SelectExaminationRecord(object obj)
         {
             var param = new DialogParameters();
-            param.Add("TrainRecordId", ((ExaminationRecord)obj).Id);
+            param.Add("ExaminationRecordId", ((ExaminationRecord)obj).Id);
             dialogService.ShowDialog("ExaminationChartView", param);
         }
 

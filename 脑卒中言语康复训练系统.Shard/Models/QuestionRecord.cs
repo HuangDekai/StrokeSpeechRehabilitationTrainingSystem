@@ -11,6 +11,16 @@ namespace 脑卒中言语康复训练系统.Shard.Models
 		private int questionId;
 		private int examinationRecordId;
 		private int optionId;
+		private Option option;
+
+        /// <summary>
+        /// 冗余字段,存放OptionId对应的问题
+        /// </summary>
+        public Option Option
+		{
+			get { return option; }
+			set { option = value; }
+		}
 
 		/// <summary>
 		/// 最后选择那一项选项的Id
