@@ -17,6 +17,7 @@
     <None Remove="Image\理发师.jpg" />
     <None Remove="Image\警察.jpg" />
     <None Remove="ViewModels\Dialogs\g50anlks.roy~" />
+    <None Remove="ViewModels\Dialogs\UserInfoViewModel.cs~RF5bebdf2.TMP" />
     <None Remove="ViewModels\etqbqmg0.3um~" />
     <None Remove="ViewModels\p3mejvnj.lb2~" />
     <None Remove="ViewModels\ppahbva2.1ue~" />
@@ -29,6 +30,7 @@
     <None Remove="Views\ee2fijec.oae~" />
     <None Remove="Views\Trains\suiu3fdk.sgb~" />
     <None Remove="Views\Trains\WordPronunciationTrainView.xaml~RFe01de1d.TMP" />
+    <None Remove="Views\UserManagementView.xaml~RF5c0cb37.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +62,10 @@
     <Resource Include="Image\消防员.jpg" />
     <Resource Include="Image\理发师.jpg" />
     <Resource Include="Image\警察.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Image\Avatar\" />
   </ItemGroup>
 
 </Project>

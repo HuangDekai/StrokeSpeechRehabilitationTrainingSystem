@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using System.Xml.Linq;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
@@ -132,6 +133,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 InsertExaminationRecord(Record);
                 regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ExaminationView");
             }
+
+            parameters.Add("ExaminationRecordId", Record.Id);
+            dialogService.ShowDialog("ExaminationChartView", parameters);
         }
 
         /// <summary>
@@ -409,7 +413,9 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 + ")";
             sqlHelper.ExecuteQuery(sql);
 
-            sql = "SELECT * FROM ExaminationRecord WHERE UserId = " + examinationRecord.UserId + " AND ExaminationId = " + examinationRecord.ExaminationId;
+            sql = "SELECT * FROM ExaminationRecord " 
+                + "WHERE UserId = " + examinationRecord.UserId + " AND ExaminationId = " + examinationRecord.ExaminationId
+                + " Order By Id DESC Limit 1";
             var reader = sqlHelper.ExecuteQuery(sql);
             if (reader.Read())
             {

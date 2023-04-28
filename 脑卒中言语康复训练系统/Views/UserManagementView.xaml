@@ -34,16 +34,21 @@
                 Width="250"
                 VerticalAlignment="Center"
                 md:HintAssist.Hint="查找用户"
-                md:TextFieldAssist.HasClearButton="True" />
+                Text="{Binding QueryName}" />
             <TextBlock
                 Margin="10,0"
                 VerticalAlignment="Center"
                 Text="所属科室:" />
-            <ComboBox SelectedIndex="0">
-                <ComboBoxItem>全部</ComboBoxItem>
-                <ComboBoxItem>康复科</ComboBoxItem>
-                <ComboBoxItem>治疗科</ComboBoxItem>
-            </ComboBox>
+            <ComboBox
+                Width="160"
+                ItemsSource="{Binding Departments}"
+                SelectedIndex="0"
+                SelectedValue="{Binding QueryDepartment}" />
+            <Button
+                Margin="30,0,0,0"
+                Command="{Binding QueryCommand}"
+                Content="查询"
+                FontSize="18" />
         </StackPanel>
         <Button
             Margin="30,5"
@@ -51,6 +56,7 @@
             Command="{Binding AddCommand}"
             Content="+ 新增用户" />
         <DataGrid
+            x:Name="UserInfoDataGrid"
             Grid.Row="1"
             Margin="30,0"
             AutoGenerateColumns="False"
@@ -142,6 +148,8 @@
                                     Margin="4,0"
                                     Background="#409EFF"
                                     BorderBrush="#409EFF"
+                                    Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                     ToolTip="编辑">
                                     <materialDesign:PackIcon Kind="Pencil" />
@@ -150,6 +158,8 @@
                                     Margin="4,0"
                                     Background="#F56C6C"
                                     BorderBrush="#F56C6C"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                     ToolTip="删除">
                                     <materialDesign:PackIcon Kind="WindowClose" />

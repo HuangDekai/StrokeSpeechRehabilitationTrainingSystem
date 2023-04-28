@@ -18,6 +18,7 @@
         <Grid.Resources>
             <converter:GenderConverter x:Key="GenderConverter" />
             <converter:DateToYearMonthDayHourMinuteSecondConverter x:Key="DateToYearMonthDayHourMinuteSecondConverter" />
+            <converter:GenderListConverter x:Key="GenderListConverter" />
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />

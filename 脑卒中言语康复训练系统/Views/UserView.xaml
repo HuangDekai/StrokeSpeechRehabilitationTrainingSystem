@@ -15,6 +15,7 @@
         <Grid.Resources>
             <!--  转换器  -->
             <converter:GenderConverter x:Key="GenderConverter" />
+            <converter:AvatarPathConverter x:Key="AvatarPathConverter" />
             <converter:DateToYearMonthDayConverter x:Key="DateToYearMonthDayConverter" />
             <converter:DateToYearMonthDayHourMinuteSecondConverter x:Key="DateToYearMonthDayHourMinuteSecondConverter" />
             <converter:TimeSpanToHourMinuteSecondConvert x:Key="TimeSpanToHourMinuteSecondConvert" />
@@ -99,7 +100,8 @@
                         Width="100"
                         Height="100"
                         Margin="10,0"
-                        Source="{Binding UserInfo.Avatar}">
+                        Source="{Binding UserInfo.Avatar, Converter={StaticResource AvatarPathConverter}}"
+                        Stretch="Uniform">
                         <Image.Clip>
                             <EllipseGeometry
                                 Center="50, 50"
@@ -318,6 +320,7 @@
                     Margin="15,0"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
+                    CanUserResizeColumns="False"
                     ColumnWidth="auto"
                     IsReadOnly="True"
                     ItemsSource="{Binding TrainRecordCollection}"
@@ -326,7 +329,7 @@
                     SelectionUnit="Cell">
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Width="2*"
+                            Width="60"
                             Binding="{Binding Sort}"
                             Header="编号">
                             <DataGridTextColumn.ElementStyle>
@@ -337,7 +340,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="120"
                             Binding="{Binding Name}"
                             Header="训练名称">
                             <DataGridTextColumn.ElementStyle>
@@ -348,18 +351,19 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="10*"
+                            Width="300"
                             Binding="{Binding Content}"
                             Header="训练内容">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
                                     <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="6*"
+                            Width="180"
                             Binding="{Binding StartTime, Converter={StaticResource DateToYearMonthDayHourMinuteSecondConverter}}"
                             Header="训练时间">
                             <DataGridTextColumn.ElementStyle>
@@ -370,7 +374,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="100"
                             Binding="{Binding Cost, Converter={StaticResource TimeSpanToHourMinuteSecondConvert}}"
                             Header="训练用时">
                             <DataGridTextColumn.ElementStyle>
@@ -380,11 +384,11 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTemplateColumn Width="5*" Header="操作">
+                        <DataGridTemplateColumn Width="100" Header="操作">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
-                                        VerticalAlignment="Top"
+                                        VerticalAlignment="Center"
                                         Command="{Binding DataContext.SelectTrainRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                         CommandParameter="{Binding}"
                                         Content="详情"
@@ -414,6 +418,7 @@
                     Margin="15,0"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
+                    CanUserResizeColumns="False"
                     ColumnWidth="auto"
                     IsReadOnly="True"
                     ItemsSource="{Binding ExaminationRecordCollection}"
@@ -421,7 +426,7 @@
                     SelectionUnit="Cell">
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Width="2*"
+                            Width="60"
                             Binding="{Binding Sort}"
                             Header="编号">
                             <DataGridTextColumn.ElementStyle>
@@ -432,29 +437,31 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="4*"
+                            Width="200"
                             Binding="{Binding Name}"
                             Header="评测名称">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="160"
                             Binding="{Binding Normal}"
                             Header="正常区间">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="2*"
+                            Width="100"
                             Binding="{Binding Score}"
                             Header="评测得分">
                             <DataGridTextColumn.ElementStyle>
@@ -465,7 +472,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="4*"
+                            Width="180"
                             Binding="{Binding CreateTime, Converter={StaticResource DateToYearMonthDayHourMinuteSecondConverter}}"
                             Header="评测时间">
                             <DataGridTextColumn.ElementStyle>
@@ -476,13 +483,13 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="3*"
+                            Width="100"
                             Binding="{Binding Cost, Converter={StaticResource TimeSpanToHourMinuteSecondConvert}}"
                             Header="评测用时">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -490,7 +497,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
-                                        VerticalAlignment="Top"
+                                        VerticalAlignment="Center"
                                         Command="{Binding DataContext.SelectExaminationRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                         CommandParameter="{Binding}"
                                         Content="详情"

@@ -35,7 +35,19 @@ namespace 脑卒中言语康复训练系统.Common.converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            short gender = -1;
+            if (value != null && value is string)
+            {
+                if (((string)value).Equals("男"))
+                {
+                    gender = 1;
+                }
+                else if (((string)value).Equals("女"))
+                {
+                    gender = 0;
+                }
+            }
+            return gender;
         }
     }
 }

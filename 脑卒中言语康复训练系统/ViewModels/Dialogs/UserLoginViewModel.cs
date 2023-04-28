@@ -204,13 +204,16 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             string sql = "select count(*) as PageNum from UserInfo";
             if (!String.IsNullOrEmpty(name))
             {
-                sql += " where name='" + name+"'";
+                sql += " where name like '%" + name+"%'";
             }
             if (!String.IsNullOrEmpty(department))
             {
                 if (String.IsNullOrEmpty(name))
                 {
                     sql += " where";
+                } else
+                {
+                    sql += " AND";
                 }
                 sql += " department='" + department+"'";
             }
@@ -247,6 +250,10 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
                 if (String.IsNullOrEmpty(name))
                 {
                     sql += "where";
+                }
+                else
+                {
+                    sql += " AND";
                 }
                 sql += " department='" + department+"'";
             }
