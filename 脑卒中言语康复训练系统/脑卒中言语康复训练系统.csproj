@@ -23,6 +23,7 @@
     <None Remove="Image\牙刷.webp" />
     <None Remove="Image\理发师.jpg" />
     <None Remove="Image\筷子.jpg" />
+    <None Remove="Image\耳机.jpg" />
     <None Remove="Image\自行车.jpg" />
     <None Remove="Image\菜刀.jpg" />
     <None Remove="Image\菜刀.webp" />
@@ -86,6 +87,7 @@
     <Resource Include="Image\牙刷.jpg" />
     <Resource Include="Image\理发师.jpg" />
     <Resource Include="Image\筷子.jpg" />
+    <Resource Include="Image\耳机.jpg" />
     <Resource Include="Image\自行车.jpg" />
     <Resource Include="Image\菜刀.jpg" />
     <Resource Include="Image\警察.jpg" />

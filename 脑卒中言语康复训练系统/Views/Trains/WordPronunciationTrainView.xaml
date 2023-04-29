@@ -16,6 +16,7 @@
         <Grid.Resources>
             <!--  转换器  -->
             <converter:IsShowConverter x:Key="IsShowConverter" />
+            <converter:PicturePathConverter x:Key="PicturePathConverter" />
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -178,7 +179,7 @@
                         <Image
                             Width="auto"
                             Height="auto"
-                            Source="{Binding CurrQuestion.Answers[0].Picture}"
+                            Source="{Binding CurrQuestion.Answers[0].Picture, Converter={StaticResource PicturePathConverter}}"
                             Stretch="UniformToFill" />
                     </materialDesign:Card>
                     <materialDesign:Card
@@ -189,7 +190,7 @@
                         <Image
                             Width="auto"
                             Height="auto"
-                            Source="{Binding CurrQuestion.Answers[1].Picture}"
+                            Source="{Binding CurrQuestion.Answers[1].Picture, Converter={StaticResource PicturePathConverter}}"
                             Stretch="UniformToFill" />
                     </materialDesign:Card>
                 </StackPanel>
