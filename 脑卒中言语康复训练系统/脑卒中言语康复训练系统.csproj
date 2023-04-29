@@ -11,11 +11,30 @@
     <None Remove="App.xaml.cs~RF364d6d61.TMP" />
     <None Remove="Image\Default.png" />
     <None Remove="Image\Kato.jpg" />
+    <None Remove="Image\剃须刀.jpg" />
+    <None Remove="Image\剪刀.jpg" />
     <None Remove="Image\医生.jpg" />
     <None Remove="Image\教师.jpg" />
+    <None Remove="Image\水杯.jpg" />
+    <None Remove="Image\水杯.webp" />
     <None Remove="Image\消防员.jpg" />
+    <None Remove="Image\照相机.jpg" />
+    <None Remove="Image\牙刷.jpg" />
+    <None Remove="Image\牙刷.webp" />
     <None Remove="Image\理发师.jpg" />
+    <None Remove="Image\筷子.jpg" />
+    <None Remove="Image\自行车.jpg" />
+    <None Remove="Image\菜刀.jpg" />
+    <None Remove="Image\菜刀.webp" />
     <None Remove="Image\警察.jpg" />
+    <None Remove="Image\钥匙.jpg" />
+    <None Remove="Image\铅笔.jpg" />
+    <None Remove="Image\铅笔.webp" />
+    <None Remove="Image\键盘.jpg" />
+    <None Remove="Image\键盘.webp" />
+    <None Remove="Image\闹钟.jpg" />
+    <None Remove="Image\雨伞.jpg" />
+    <None Remove="Image\飞机.jpg" />
     <None Remove="ViewModels\Dialogs\g50anlks.roy~" />
     <None Remove="ViewModels\Dialogs\UserInfoViewModel.cs~RF5bebdf2.TMP" />
     <None Remove="ViewModels\etqbqmg0.3um~" />
@@ -57,15 +76,44 @@
   <ItemGroup>
     <Resource Include="Image\Kato.jpg" />
     <Resource Include="Image\Default.png" />
+    <Resource Include="Image\剃须刀.jpg" />
+    <Resource Include="Image\剪刀.jpg" />
     <Resource Include="Image\医生.jpg" />
     <Resource Include="Image\教师.jpg" />
+    <Resource Include="Image\水杯.jpg" />
     <Resource Include="Image\消防员.jpg" />
+    <Resource Include="Image\照相机.jpg" />
+    <Resource Include="Image\牙刷.jpg" />
     <Resource Include="Image\理发师.jpg" />
+    <Resource Include="Image\筷子.jpg" />
+    <Resource Include="Image\自行车.jpg" />
+    <Resource Include="Image\菜刀.jpg" />
     <Resource Include="Image\警察.jpg" />
+    <Resource Include="Image\钥匙.jpg" />
+    <Resource Include="Image\铅笔.jpg" />
+    <Resource Include="Image\键盘.jpg" />
+    <Resource Include="Image\闹钟.jpg" />
+    <Resource Include="Image\雨伞.jpg" />
+    <Resource Include="Image\飞机.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Image\Avatar\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -73,6 +73,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (res.Result == ButtonResult.OK)
             {
                 InsertTrainRecord();
+                isNormalOut = true;
                 Cancel();
             }
         }
@@ -178,6 +179,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private bool isClickPause = false;
         private int isNextShow;
         private int isCommitShow = 2;
+        private bool isNormalOut = false;
 
         /// <summary>
         /// 用于控制提交按钮是否显示,0-展示,1-隐藏但占位,2-隐藏且不占位, 默认2
@@ -289,9 +291,12 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             recognitionEngine.RecognizeAsyncStop();
             synthesizer.SpeakAsyncCancelAll();
 
-            var param = new DialogParameters();
-            param.Add("TrainRecordId", CurrTrainRecord.Id);
-            dialogService.ShowDialog("ResultChartView", param);
+            if (isNormalOut)
+            {
+                var param = new DialogParameters();
+                param.Add("TrainRecordId", CurrTrainRecord.Id);
+                dialogService.ShowDialog("ResultChartView", param);
+            }
         }
 
         /// <summary>
