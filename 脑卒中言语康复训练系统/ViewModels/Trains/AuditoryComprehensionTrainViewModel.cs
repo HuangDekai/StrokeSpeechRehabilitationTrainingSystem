@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using MaterialDesignThemes.Wpf;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -6,33 +7,36 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
-using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels.Trains
 {
-    public class WordPronunciationTrainViewModel : BindableBase, INavigationAware
+    public class AuditoryComprehensionTrainViewModel : BindableBase, INavigationAware
     {
-        public WordPronunciationTrainViewModel(IDialogHostService dialogService, IRegionManager regionManager) 
+        public AuditoryComprehensionTrainViewModel(IDialogHostService dialogService, IRegionManager regionManager) 
         {
-            this.dialogService= dialogService;
-            this.regionManager= regionManager;
+            this.dialogService = dialogService;
+            this.regionManager = regionManager;
 
             CancelCommand = new DelegateCommand(Cancel);
-            NextCommand = new DelegateCommand(NextButtonFuc);
-            ReplayCommand = new DelegateCommand(ReplayButtonFuc);
-            CommitCommand = new DelegateCommand(Commit);
+            ReplayCommand = new DelegateCommand(Replay);
+            NextCommand = new DelegateCommand(Next);
             PauseCommand = new DelegateCommand(Pause);
+            LeftImageFocusedCommand = new DelegateCommand(LeftImageFocused);
+            RightImageFocusedCommand = new DelegateCommand(RightImageFocused);
+            ImageUnFocusedCommand = new DelegateCommand(ImageUnFocused);
+            SelecteCommand = new DelegateCommand<object>(Select);
+            CommitCommand = new DelegateCommand(Commit);
+
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
         }
 
@@ -41,25 +45,10 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public DelegateCommand ReplayCommand { get; set; }
         public DelegateCommand CommitCommand { get; set; }
         public DelegateCommand PauseCommand { get; set; }
-
-        /// <summary>
-        /// PauseCommand 绑定方法, 暂停
-        /// </summary>
-        private async void Pause()
-        {
-            isClickPause = true;
-            recognitionEngine.RecognizeAsyncStop();
-            synthesizer.SpeakAsyncCancelAll();
-            var parameters = new DialogParameters();
-            parameters.Add("Title", "暂停中");
-            parameters.Add("Message", "正在暂停中,是否开始答题?");
-            parameters.Add("ButtonText", "开始");
-            var res = await dialogService.ShowDialog("MessageBoxOnlySureView", parameters);
-            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime = DateTime.Now;
-            IsBtnGroupShow = 0;
-            isClickPause = false;
-            Replay();
-        }
+        public DelegateCommand LeftImageFocusedCommand { get; set; }
+        public DelegateCommand RightImageFocusedCommand { get; set; }
+        public DelegateCommand ImageUnFocusedCommand { get; set; }
+        public DelegateCommand<object> SelecteCommand { get; set; }
 
         /// <summary>
         /// CommitCommand 绑定方法, 点击按钮提交问卷,使用Cancel()离开页面
@@ -74,40 +63,76 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (res.Result == ButtonResult.OK)
             {
                 InsertTrainRecord();
-                isNormalOut = true;
                 Cancel();
             }
         }
 
         /// <summary>
-        /// ReplayCommand 绑定方法, 点击按钮重播该问题
+        /// PauseCommand 绑定方法, 暂停
         /// </summary>
-        private void ReplayButtonFuc()
+        private async void Pause()
         {
-            recognitionEngine.RecognizeAsyncStop();
-            isNext = false;
-            isRecognized = true;
+            synthesizer.SpeakAsyncCancelAll();
+            var parameters = new DialogParameters();
+            parameters.Add("Title", "暂停中");
+            parameters.Add("Message", "正在暂停中,是否开始答题?");
+            parameters.Add("ButtonText", "开始");
+            var res = await dialogService.ShowDialog("MessageBoxOnlySureView", parameters);
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime = DateTime.Now;
+
+            Replay();
+        }
+
+        private void Select(object obj)
+        {
+            if (IsEnable)
+            {
+                IsEnable = false;
+
+                var selected = obj as AnswerRaise;
+                if (selected != null)
+                {
+                    int score = 0;
+                    if (selected.IsCorrect)
+                    {
+                        score = 1;
+                        synthesizer.Speak("答对了");
+                    }
+                    else
+                    {
+                        synthesizer.Speak("回答错误,继续努力");
+                    }
+                    CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Score = score;
+
+                    Next();
+                }
+            }
         }
 
         /// <summary>
-        /// 重播该问题
+        /// 鼠标离开图片区域,显示效果切换
         /// </summary>
-        private void Replay()
+        private void ImageUnFocused()
         {
-            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Retry ++;
-            recognitionEngine.RecognizeAsyncStop();
-            synthesizer.SpeakAsync(CurrQuestion.Content);
+            LeftElevation = "Dp1";
+            RightElevation = "Dp1";
         }
 
         /// <summary>
-        /// NextCommand 绑定方法, 点击按钮进入下一个问题
+        /// 鼠标进入左边图片区域,显示效果切换
         /// </summary>
-        private void NextButtonFuc()
+        private void LeftImageFocused()
         {
-            isClickNext = true;
-            recognitionEngine.RecognizeAsyncStop();
-            isNext = true;
-            isRecognized = true;
+            LeftElevation = "Dp24";
+            RightElevation = "Dp1";
+        }
+        /// <summary>
+        /// 鼠标进入右边图片区域,显示效果切换
+        /// </summary>
+        private void RightImageFocused()
+        {
+            LeftElevation = "Dp1";
+            RightElevation = "Dp24";
         }
 
         /// <summary>
@@ -115,8 +140,10 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Next()
         {
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].EndTime = DateTime.Now;
             if (CurrItemIndex < MaxItemIndex)
             {
+                synthesizer.SpeakAsyncCancelAll();
                 CurrItemIndex++;
                 CurrQuestion = TrainInfo.TrainQuestions[CurrItemIndex - 1];
                 IsBtnGroupShow = 1;
@@ -125,10 +152,23 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                     IsNextShow = 2;
                     IsCommitShow = 0;
                 }
-                recognitionEngine.RecognizeAsyncStop();
                 synthesizer.SpeakAsync(CurrQuestion.Content);
+                StartTimer();
             }
-            
+            else if (CurrItemIndex == MaxItemIndex)
+            {
+                Commit();
+            }
+        }
+
+        /// <summary>
+        /// 重播该问题
+        /// </summary>
+        private void Replay()
+        {
+            IsBtnGroupShow = 1;
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Retry++;
+            synthesizer.SpeakAsync(CurrQuestion.Content);
         }
 
         /// <summary>
@@ -136,9 +176,9 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Cancel()
         {
-            recognitionEngine.RecognizeAsyncStop();
             if (journal.CanGoBack)
             {
+                synthesizer.SpeakAsyncCancelAll();
                 journal.GoBack();
             }
         }
@@ -148,13 +188,8 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// </summary>
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
-            if (!isLeave && !isClickPause)
-            {
-                IsBtnGroupShow = 0;
-                synthesizer.Speak("请回答");
-                CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime = DateTime.Now;
-                recognitionEngine.RecognizeAsync(RecognizeMode.Single);
-            }
+            IsBtnGroupShow = 0;
+            CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].StartTime = DateTime.Now;
         }
 
         #region 属性
@@ -164,23 +199,28 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private IRegionNavigationJournal journal;
         //语音播放器
         private SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-        //创建语音识别引擎
-        SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
 
         private TrainRaise trainInfo;
         private TrainQuestionRaise currQuestion;
         private int currItemIndex = 1;
         private int maxItemIndex;
+        private TrainRecordRaise currTrainRecord;
         private int isBtnGroupShow = 1;
-        private string speechResult;
-        private bool isNext = false;
-        private bool isRecognized = false;
-        private bool isLeave = false;
-        private bool isClickNext = false;
-        private bool isClickPause = false;
         private int isNextShow;
         private int isCommitShow = 2;
-        private bool isNormalOut = false;
+        private string leftElevation = "Dp1";
+        private string rightElevation = "Dp1";
+        private bool isEnable = true;
+
+        /// <summary>
+        /// 用于控制图片的鼠标事件,防止多次点击
+        /// </summary>
+        public bool IsEnable
+        {
+            get { return isEnable; }
+            set { isEnable = value; RaisePropertyChanged(); }
+        }
+
 
         /// <summary>
         /// 用于控制提交按钮是否显示,0-展示,1-隐藏但占位,2-隐藏且不占位, 默认2
@@ -201,27 +241,23 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             set { isNextShow = value; RaisePropertyChanged(); }
         }
 
-        private TrainRecordRaise currTrainRecord;
-
         /// <summary>
-        /// 用于存放训练记录
+        /// 右边图片悬浮显示
         /// </summary>
-        public TrainRecordRaise CurrTrainRecord
+        public string RightElevation
         {
-            get { return currTrainRecord; }
-            set { currTrainRecord = value; RaisePropertyChanged(); }
+            get { return rightElevation; }
+            set { rightElevation = value; RaisePropertyChanged(); }
         }
 
-
         /// <summary>
-        /// 用于存放语音识别结果
+        /// 左边图片悬浮显示
         /// </summary>
-        public string SpeechResult
+        public string LeftElevation
         {
-            get { return speechResult; }
-            set { speechResult = value; RaisePropertyChanged(); }
+            get { return leftElevation; }
+            set { leftElevation= value; RaisePropertyChanged(); }
         }
-
 
         /// <summary>
         /// 用于控制右侧按钮是否显示,0-展示,1-隐藏
@@ -230,6 +266,15 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         {
             get { return isBtnGroupShow; }
             set { isBtnGroupShow = value; RaisePropertyChanged(); }
+        }
+
+        /// <summary>
+        /// 用于存放训练记录
+        /// </summary>
+        public TrainRecordRaise CurrTrainRecord
+        {
+            get { return currTrainRecord; }
+            set { currTrainRecord = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -268,19 +313,16 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             get { return trainInfo; }
             set { trainInfo = value; RaisePropertyChanged(); }
         }
-
         #endregion
 
+        #region 页面进入退出时操作
         /// <summary>
-        /// 该方法用于设置进入时候是否重用原来的页面
+        /// 进入页面是否重用实例 - 否
         /// </summary>
-        /// <param name="navigationContext"></param>
-        /// <returns>false - 每次进入该页面都创建一个新实例; true - 重用</returns>
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
         }
-
 
         /// <summary>
         /// 在页面从导航堆栈中移除时被调用，用于保存页面的状态
@@ -288,16 +330,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <param name="navigationContext"></param>
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            isLeave = true;
-            recognitionEngine.RecognizeAsyncStop();
             synthesizer.SpeakAsyncCancelAll();
-
-            if (isNormalOut)
-            {
-                var param = new DialogParameters();
-                param.Add("TrainRecordId", CurrTrainRecord.Id);
-                dialogService.ShowDialog("ResultChartView", param);
-            }
         }
 
         /// <summary>
@@ -322,10 +355,11 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                 GetTrainQuestions();
                 CurrQuestion = TrainInfo.TrainQuestions[0];
                 CurrTrainRecord = InitTrainRecord(TrainInfo);
-                InitSpeechRecognitionEngine(TrainInfo);
+                
                 synthesizer.SpeakAsync(CurrQuestion.Content);
             }
         }
+        #endregion
 
         #region 数据库操作
         /// <summary>
@@ -436,7 +470,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         {
             GetConnetion();
             DateTime dateTime = DateTime.Now;
-            
+
             string sql = "INSERT INTO TrainRecord(UserId,TrainId,StartTime,EndTime,CreateTime,UpdateTime) VALUES (" +
                 CurrTrainRecord.UserId + "," +
                 CurrTrainRecord.TrainId + "," +
@@ -452,7 +486,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (reader.Read())
             {
                 var trainRecordId = reader.GetInt32(reader.GetOrdinal("Id"));
-                CurrTrainRecord.Id= trainRecordId;
+                CurrTrainRecord.Id = trainRecordId;
                 reader.Close();
 
                 foreach (var record in CurrTrainRecord.TrainQuestionRecords)
@@ -469,138 +503,12 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
                     ")";
                     sqlHelper.ExecuteQuery(sql);
                 }
-                
+
             }
 
             sqlHelper.CloseConnection();
         }
         #endregion
-
-
-        /// <summary>
-        /// 初始化TTS引擎,根据trainRaise限定词语保证识别率
-        /// </summary>
-        /// <param name="trainRaise">带有回答内容的TrainRaise</param>
-        private void InitSpeechRecognitionEngine(TrainRaise trainRaise)
-        {
-            //创建一组语音识别的语法约束选择
-            Choices choices = new Choices();
-            HashSet<string> speechNames = new HashSet<string>();
-            //添加语音识别关键字
-            foreach (var question in trainRaise.TrainQuestions)
-            {
-                foreach (var answer in question.Answers)
-                {
-                    if (!speechNames.Contains(answer.Content))
-                    {
-                        speechNames.Add(answer.Content);
-                        choices.Add(answer.Content);
-                    }
-                }
-            }
-            //以编程的方式为语音生成约束
-            GrammarBuilder gb = new GrammarBuilder(choices);
-            //grammarbuilder封装对象
-            Grammar grm = new Grammar(gb);
-            recognitionEngine.LoadGrammarAsync(grm);
-            //设置过期时间
-            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(20);
-            //创建语音接收事件
-            recognitionEngine.SpeechRecognized += (s, e) => {
-                isRecognized = true;
-                if (e.Result.Confidence >= 0.5)
-                {
-                    SpeechResult = e.Result.Text;
-                    if (SpeechResult.Equals(CurrQuestion.CorrectAnswer.Content))
-                    {
-                        CorrectAnwer();
-                        isNext = true;
-                    } else
-                    {
-                        ErrorAnwer();
-                    }
-                }
-                else
-                {
-                    RecognitionFailed();
-                }
-            };
-            recognitionEngine.AudioStateChanged += (s, e) =>
-            {
-                //离开页面
-                if (isLeave)
-                {
-                    
-                }
-                //点击暂停
-                else if (isClickPause)
-                {
-
-                }
-                //Timeout
-                else if (e.AudioState == AudioState.Stopped && !isNext && !isRecognized)
-                {
-                    RecognitionFailed();
-                    Replay();
-                }
-                //识别失败情况
-                else if (e.AudioState == AudioState.Stopped && !isNext)
-                {
-                    Replay();
-                    isRecognized = false;
-                }
-                //识别成功
-                else if (e.AudioState == AudioState.Stopped && isNext)
-                {
-                    CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].Score = isClickNext ? 0 : 1;
-                    CurrTrainRecord.TrainQuestionRecords[CurrItemIndex - 1].EndTime = DateTime.Now;
-                    //如果是最后一题答对了
-                    if (CurrItemIndex >= MaxItemIndex)
-                    {
-                        Commit();
-                    }
-                    else
-                    {
-                        Next();
-                        isNext = false;
-                        isRecognized = false;
-                        isClickNext = false;
-                    }
-                }
-            };
-            //音频输入
-            recognitionEngine.SetInputToDefaultAudioDevice();
-        }
-
-        /// <summary>
-        /// 语音识别失败执行该函数
-        /// </summary>
-        private void RecognitionFailed()
-        {
-            synthesizer.Rate = 1;
-            synthesizer.Speak("识别失败,请重试");
-            synthesizer.Rate = 0;
-        }
-
-        /// <summary>
-        /// 答案正确执行该函数
-        /// </summary>
-        private void CorrectAnwer()
-        {
-            synthesizer.Rate = 1;
-            synthesizer.Speak("答对了");
-            synthesizer.Rate = 0;
-        }
-
-        /// <summary>
-        /// 答案错误执行该函数
-        /// </summary>
-        private void ErrorAnwer()
-        {
-            synthesizer.Rate = 1;
-            synthesizer.Speak("回答错误,再来一次");
-            synthesizer.Rate = 0;
-        }
 
         /// <summary>
         /// 打乱一个 ObservableCollection 的顺序
@@ -647,7 +555,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <returns>初始化好的训练记录</returns>
         private TrainRecordRaise InitTrainRecord(TrainRaise trainInfo)
         {
-            
+
             var tarinRecord = new TrainRecordRaise
             {
                 TrainId = trainInfo.Id,
@@ -666,5 +574,20 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             return tarinRecord;
         }
         #endregion
+
+        /// <summary>
+        /// 防止多次点击的计时器
+        /// </summary>
+        private void StartTimer()
+        {
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(0.5);
+            timer.Tick += (sender, args) =>
+            {
+                IsEnable = true;
+                ((DispatcherTimer)sender).Stop();
+            };
+            timer.Start();
+        }
     }
 }

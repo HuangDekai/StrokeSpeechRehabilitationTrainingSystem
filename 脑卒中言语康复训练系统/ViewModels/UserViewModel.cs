@@ -142,7 +142,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             }
             TrainRecordCollection = new ObservableCollection<TrainRecord>();
             GetConnetion();
-            string sql = "select * from TrainRecord join Train on TrainRecord.TrainId = Train.Id where TrainRecord.UserId = " + userInfo.Id;
+            string sql = "select * from TrainRecord join Train on TrainRecord.TrainId = Train.Id where TrainRecord.UserId = " + userInfo.Id + " ORDER BY Id DESC";
             var reader = sqlHelper.ExecuteQuery(sql);
             int i = 1;
             while (reader.Read())
@@ -180,7 +180,7 @@ namespace 脑卒中言语康复训练系统.ViewModels
             string sql = "select * from ExaminationRecord " +
                          "join Examination " +
                          "on ExaminationRecord.ExaminationId = Examination.Id " +
-                         "where ExaminationRecord.UserId = " + userInfo.Id;
+                         "where ExaminationRecord.UserId = " + userInfo.Id + " ORDER BY Id DESC";
             var reader = sqlHelper.ExecuteQuery(sql);
             int i = 1;
             while (reader.Read())
