@@ -19,24 +19,26 @@
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
         <TextBlock
             Margin="20,10"
             FontSize="25"
             FontWeight="Bold"
             Text="{Binding Name}" />
-        <StackPanel Grid.Row="1">
-            <TextBlock
-                Margin="20,10"
-                FontWeight="Bold"
-                Foreground="#0b9afd"
-                Text="量表描述" />
-            <TextBlock
-                MaxWidth="1200"
-                Margin="40,0"
-                Foreground="#939393"
-                Text="{Binding ExaminationInfo.Content}"
-                TextWrapping="Wrap" />
-        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <TextBlock
+                    Margin="20,10"
+                    FontWeight="Bold"
+                    Foreground="#0b9afd"
+                    Text="量表描述" />
+                <TextBlock
+                    Margin="40,0"
+                    Foreground="#939393"
+                    Text="{Binding ExaminationInfo.Content}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </ScrollViewer>
         <StackPanel
             Grid.Row="2"
             HorizontalAlignment="Right"
