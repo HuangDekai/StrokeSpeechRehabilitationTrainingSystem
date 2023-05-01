@@ -340,7 +340,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn
-                            Width="120"
+                            Width="140"
                             Binding="{Binding Name}"
                             Header="训练名称">
                             <DataGridTextColumn.ElementStyle>

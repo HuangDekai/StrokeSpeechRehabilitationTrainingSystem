@@ -27,14 +27,13 @@ namespace 脑卒中言语康复训练系统.ViewModels
         {
             SchemeLooks = new ObservableCollection<SchemeLook>();
 
-            List<SchemeItem> list = new List<SchemeItem>();
-            for (int i = 1; i < 6; i++)
-            {
-                list.Add(new SchemeItem { Order = i, Name = "Test" + i, Level = i, Quantity=5});
-            }
-
             for (int i = 0; i < 5; i++)
             {
+                List<SchemeItem> list = new List<SchemeItem>();
+                for (int j = 1; j <= 10 + i; j++)
+                {
+                    list.Add(new SchemeItem { Order = i, Name = "Test" + i, Level = i, Quantity = 5 });
+                }
                 SchemeLooks.Add(new SchemeLook { Name = "Project" + i, Projects = list});
             }
         }

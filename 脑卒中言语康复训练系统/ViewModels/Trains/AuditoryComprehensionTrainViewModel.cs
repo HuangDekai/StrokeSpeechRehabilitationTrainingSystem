@@ -60,7 +60,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             parameters.Add("Title", "温馨提示");
             parameters.Add("Message", "是否确认完成答题?");
             var res = await dialogService.ShowDialog("MessageBoxView", parameters);
-            if (res.Result == ButtonResult.OK)
+            if (res != null && res.Result == ButtonResult.OK)
             {
                 InsertTrainRecord();
                 Cancel();
