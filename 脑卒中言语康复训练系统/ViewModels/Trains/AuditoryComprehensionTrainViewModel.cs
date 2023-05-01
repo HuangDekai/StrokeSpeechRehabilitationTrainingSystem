@@ -331,6 +331,9 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
             synthesizer.SpeakAsyncCancelAll();
+            var param = new DialogParameters();
+            param.Add("TrainRecordId", CurrTrainRecord.Id);
+            dialogService.ShowDialog("ResultChartView", param);
         }
 
         /// <summary>

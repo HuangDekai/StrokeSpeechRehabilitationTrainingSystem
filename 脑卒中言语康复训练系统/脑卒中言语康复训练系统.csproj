@@ -44,6 +44,7 @@
     <None Remove="ViewModels\QuestionItemViewModel.cs~RF6e578a1.TMP" />
     <None Remove="ViewModels\tbzdnuby.r5l~" />
     <None Remove="ViewModels\TrainProgramViewModel.cs~RF9822f0f.TMP" />
+    <None Remove="ViewModels\Trains\IncompleteImageMatchingTrainViewModel.cs~RF536336b.TMP" />
     <None Remove="ViewModels\Trains\iqjpyq5i.jcw~" />
     <None Remove="ViewModels\Trains\WordPronunciationTrainViewModel.cs~RF13d04ab6.TMP" />
     <None Remove="Views\Dialogs\QuestionItemView.xaml~RF354d81c1.TMP" />
