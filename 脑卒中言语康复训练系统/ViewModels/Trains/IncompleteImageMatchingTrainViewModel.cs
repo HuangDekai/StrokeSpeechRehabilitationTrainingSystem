@@ -64,6 +64,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (res != null && res.Result == ButtonResult.OK)
             {
                 InsertTrainRecord();
+                isNormalOut = true;
                 Cancel();
             }
         }
@@ -215,7 +216,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private bool isEnable = true;
         private TransformedBitmap titleImage;
         private TransformedBitmap answerImage;
-
+        private bool isNormalOut = false;
         public TransformedBitmap AnswerImage
         {
             get { return answerImage; }
@@ -349,9 +350,12 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
             synthesizer.SpeakAsyncCancelAll();
-            var param = new DialogParameters();
-            param.Add("TrainRecordId", CurrTrainRecord.Id);
-            dialogService.ShowDialog("ResultChartView", param);
+            if (isNormalOut)
+            {
+                var param = new DialogParameters();
+                param.Add("TrainRecordId", CurrTrainRecord.Id);
+                dialogService.ShowDialog("ResultChartView", param);
+            }
         }
 
         /// <summary>

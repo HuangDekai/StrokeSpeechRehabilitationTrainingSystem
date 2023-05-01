@@ -63,6 +63,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             if (res != null && res.Result == ButtonResult.OK)
             {
                 InsertTrainRecord();
+                isNormalOut = true;
                 Cancel();
             }
         }
@@ -211,6 +212,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private string leftElevation = "Dp1";
         private string rightElevation = "Dp1";
         private bool isEnable = true;
+        private bool isNormalOut = false;
 
         /// <summary>
         /// 用于控制图片的鼠标事件,防止多次点击
@@ -331,9 +333,12 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
             synthesizer.SpeakAsyncCancelAll();
-            var param = new DialogParameters();
-            param.Add("TrainRecordId", CurrTrainRecord.Id);
-            dialogService.ShowDialog("ResultChartView", param);
+            if (isNormalOut)
+            {
+                var param = new DialogParameters();
+                param.Add("TrainRecordId", CurrTrainRecord.Id);
+                dialogService.ShowDialog("ResultChartView", param);
+            }
         }
 
         /// <summary>
