@@ -182,15 +182,17 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         {
 
         }
-        
+
         /// <summary>
-        /// 获取数据库连接
+        /// 获取SQLite Connection
         /// </summary>
-        public static void getConnetion() {
+        private static void GetConnetion()
+        {
             string name = AppDomain.CurrentDomain.BaseDirectory;
-            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
-            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+            string path = System.IO.Directory.GetParent(name).FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\Graduate.db");
         }
+
 
         /// <summary>
         /// 查询并更新页面中的当前页和最大页
@@ -200,7 +202,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         /// <param name="department">查询部门</param>
         public void getUserInfoDataRowNum(int pageSize, string name, string department)
         {
-            getConnetion();
+            GetConnetion();
             string sql = "select count(*) as PageNum from UserInfo";
             if (!String.IsNullOrEmpty(name))
             {
@@ -237,7 +239,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         /// <param name="department">查询部门</param>
         public void getUserInfoData(int pageIndex, int pageSize, string name="", string department="")
         {
-            getConnetion();
+            GetConnetion();
             UserInfos = new ObservableCollection<UserInfo>();
             int start = (pageIndex - 1) * pageSize;
             string sql = "select *  from UserInfo ";
@@ -297,7 +299,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         public void getDepartments()
         {
             
-            getConnetion();
+            GetConnetion();
             Departments = new ObservableCollection<string>();
             Departments.Add("");
             string sql = "select distinct department from UserInfo;";

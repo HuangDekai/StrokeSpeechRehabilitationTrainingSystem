@@ -87,12 +87,13 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
         /// <summary>
         /// 获取SQLite Connection
         /// </summary>
-        public static void GetConnetion()
+        private static void GetConnetion()
         {
             string name = AppDomain.CurrentDomain.BaseDirectory;
-            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
-            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+            string path = System.IO.Directory.GetParent(name).FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\Graduate.db");
         }
+
 
         /// <summary>
         /// 获取对应名的Examination信息

@@ -20,8 +20,8 @@ namespace 脑卒中言语康复训练系统.Common.Tools
         private static void GetConnetion()
         {
             string name = AppDomain.CurrentDomain.BaseDirectory;
-            string path = System.IO.Directory.GetParent(name).Parent.Parent.Parent.Parent.FullName;
-            sqlHelper = new SqLiteHelper("data source = " + path + "\\脑卒中言语康复训练系统.Shard\\Graduate.db");
+            string path = System.IO.Directory.GetParent(name).FullName;
+            sqlHelper = new SqLiteHelper("data source = " + path + "\\Graduate.db");
         }
 
         private static void CloseConnetion()
