@@ -542,7 +542,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             Grammar grm = new Grammar(gb);
             recognitionEngine.LoadGrammarAsync(grm);
             //设置过期时间
-            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(20);
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(30);
             //创建语音接收事件
             recognitionEngine.SpeechRecognized += (s, e) => {
                 isRecognized = true;
