@@ -14,6 +14,7 @@ using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
+using 脑卒中言语康复训练系统.Extensions;
 
 namespace 脑卒中言语康复训练系统.ViewModels.Trains
 {
@@ -209,6 +210,14 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private string rightElevation = "Dp1";
         private bool isEnable = true;
         private bool isNormalOut = false;
+        private NavigationParameters schemeParm;
+
+        public NavigationParameters SchemeParm
+        {
+            get { return schemeParm; }
+            set { schemeParm = value; RaisePropertyChanged(); }
+        }
+
 
         /// <summary>
         /// 用于控制图片的鼠标事件,防止多次点击
@@ -326,14 +335,34 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// 在页面从导航堆栈中移除时被调用，用于保存页面的状态
         /// </summary>
         /// <param name="navigationContext"></param>
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public async void OnNavigatedFrom(NavigationContext navigationContext)
         {
             synthesizer.SpeakAsyncCancelAll();
             if (isNormalOut)
             {
                 var param = new DialogParameters();
                 param.Add("TrainRecordId", CurrTrainRecord.Id);
-                dialogService.ShowDialog("ResultChartView", param);
+                await dialogService.ShowDialog("ResultChartView", param);
+
+                if (SchemeParm != null)
+                {
+                    var schemes = SchemeParm.GetValue<SchemeLookRaise>("Scheme");
+                    int next = SchemeParm.GetValue<int>("NextTrain");
+                    if (next >= schemes.Projects.Count)
+                    {
+                        return;
+                    }
+                    var trainType = schemes.Projects[next].Type;
+                    var tarinInfo = TrainQueryTool.GetTrainRaiseByTrainType(trainType);
+
+                    var navigationParam = new NavigationParameters();
+                    navigationParam.Add("Scheme", schemes);
+                    navigationParam.Add("NextTrain", ++next);
+                    navigationParam.Add("TrainInfo",tarinInfo);
+                    navigationParam.Add("MaxItemIndex", schemes.Projects[next-1].Quantity);
+                    string target = schemes.Projects[next - 1].Type + "View";
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(target, navigationParam);
+                }
             }
         }
 
@@ -343,6 +372,15 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <param name="navigationContext">传入的内容</param>
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            if (navigationContext.Parameters.ContainsKey("Scheme") && navigationContext.Parameters.ContainsKey("NextTrain"))
+            {
+                var schemes = navigationContext.Parameters.GetValue<SchemeLookRaise>("Scheme");
+                int next = navigationContext.Parameters.GetValue<int>("NextTrain");
+                var navigationParam = new NavigationParameters();
+                navigationParam.Add("Scheme", schemes);
+                navigationParam.Add("NextTrain", next);
+                SchemeParm = navigationParam;
+            }
             if (navigationContext.Parameters.ContainsKey("TrainInfo"))
             {
                 journal = navigationContext.NavigationService.Journal;

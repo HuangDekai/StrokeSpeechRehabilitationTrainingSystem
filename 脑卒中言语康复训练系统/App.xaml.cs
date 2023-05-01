@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.ViewModels;
 using 脑卒中言语康复训练系统.ViewModels.Dialogs;

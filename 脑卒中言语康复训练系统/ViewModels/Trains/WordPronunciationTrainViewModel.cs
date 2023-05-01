@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using 脑卒中言语康复训练系统.Common;
 using 脑卒中言语康复训练系统.Common.Tools;
+using 脑卒中言语康复训练系统.Extensions;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
 using 脑卒中言语康复训练系统.Shard.Models;
@@ -181,6 +182,13 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         private int isNextShow;
         private int isCommitShow = 2;
         private bool isNormalOut = false;
+        private NavigationParameters schemeParm;
+
+        public NavigationParameters SchemeParm
+        {
+            get { return schemeParm; }
+            set { schemeParm = value; RaisePropertyChanged(); }
+        }
 
         /// <summary>
         /// 用于控制提交按钮是否显示,0-展示,1-隐藏但占位,2-隐藏且不占位, 默认2
@@ -286,7 +294,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// 在页面从导航堆栈中移除时被调用，用于保存页面的状态
         /// </summary>
         /// <param name="navigationContext"></param>
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public async void OnNavigatedFrom(NavigationContext navigationContext)
         {
             isLeave = true;
             recognitionEngine.RecognizeAsyncStop();
@@ -296,7 +304,27 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
             {
                 var param = new DialogParameters();
                 param.Add("TrainRecordId", CurrTrainRecord.Id);
-                dialogService.ShowDialog("ResultChartView", param);
+                await dialogService.ShowDialog("ResultChartView", param);
+
+                if (SchemeParm != null)
+                {
+                    var schemes = SchemeParm.GetValue<SchemeLookRaise>("Scheme");
+                    int next = SchemeParm.GetValue<int>("NextTrain");
+                    if (next >= schemes.Projects.Count)
+                    {
+                        return;
+                    }
+                    var trainType = schemes.Projects[next].Type;
+                    var tarinInfo = TrainQueryTool.GetTrainRaiseByTrainType(trainType);
+
+                    var navigationParam = new NavigationParameters();
+                    navigationParam.Add("Scheme", schemes);
+                    navigationParam.Add("NextTrain", ++next);
+                    navigationParam.Add("TrainInfo", tarinInfo);
+                    navigationParam.Add("MaxItemIndex", schemes.Projects[next - 1].Quantity);
+                    string target = schemes.Projects[next - 1].Type + "View";
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(target, navigationParam);
+                }
             }
         }
 
@@ -306,6 +334,15 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
         /// <param name="navigationContext">传入的内容</param>
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            if (navigationContext.Parameters.ContainsKey("Scheme") && navigationContext.Parameters.ContainsKey("NextTrain"))
+            {
+                var schemes = navigationContext.Parameters.GetValue<SchemeLookRaise>("Scheme");
+                int next = navigationContext.Parameters.GetValue<int>("NextTrain");
+                var navigationParam = new NavigationParameters();
+                navigationParam.Add("Scheme", schemes);
+                navigationParam.Add("NextTrain", next);
+                SchemeParm = navigationParam;
+            }
             if (navigationContext.Parameters.ContainsKey("TrainInfo"))
             {
                 journal = navigationContext.NavigationService.Journal;
