@@ -302,7 +302,7 @@ namespace 脑卒中言语康复训练系统.ViewModels.Dialogs
             GetConnetion();
             Departments = new ObservableCollection<string>();
             Departments.Add("");
-            string sql = "select distinct department from UserInfo;";
+            string sql = "select Name from Department;";
             var reader = sqlHelper.ExecuteQuery(sql);
             while (reader.Read())
             {
