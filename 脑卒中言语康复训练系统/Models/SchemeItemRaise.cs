@@ -18,13 +18,33 @@ namespace 脑卒中言语康复训练系统.Models
 
         private string type;
 
+        private int schemeLookId;
+        private int selectId = 0;
+
+        /// <summary>
+        /// 冗余字段,存放选择的训练Id, 数字+1为对应的TrainId
+        /// </summary>
+        public int SelectId
+        {
+            get { return selectId; }
+            set { selectId = value; RaisePropertyChanged(); }
+        }
+
+
+        public int SchemeLookId
+        {
+            get { return schemeLookId; }
+            set { schemeLookId = value; RaisePropertyChanged(); }
+        }
+
+
         /// <summary>
         /// 冗余字段,训练的类型,用于启动项目
         /// </summary>
         public string Type
         {
             get { return type; }
-            set { type = value; }
+            set { type = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -57,7 +77,7 @@ namespace 脑卒中言语康复训练系统.Models
 
 
         /// <summary>
-        /// 项目名称
+        /// 项目名称,冗余字段,用于标识相关的训练项目名称
         /// </summary>
         public string Name
         {

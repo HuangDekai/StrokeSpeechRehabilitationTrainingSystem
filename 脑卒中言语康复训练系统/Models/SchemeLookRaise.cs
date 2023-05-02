@@ -15,6 +15,8 @@ namespace 脑卒中言语康复训练系统.Models
         private int userId;
         private ObservableCollection<SchemeItemRaise> projects;
 
+
+
         public int UserId
         {
             get { return userId; }

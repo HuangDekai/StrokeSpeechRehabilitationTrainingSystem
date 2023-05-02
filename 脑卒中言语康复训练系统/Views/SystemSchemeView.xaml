@@ -17,6 +17,7 @@
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
+                <!--  转换器  -->
                 <converter:LevelConverter x:Key="LevelConverter" />
                 <converter:QuantityConverter x:Key="QuantityConverter" />
             </ResourceDictionary>
@@ -41,6 +42,8 @@
                 Command="{Binding AddCommand}"
                 Content="新增" />
         </DockPanel>
+
+        <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,0.3" />
         <ScrollViewer Grid.Row="1">
             <ItemsControl
                 Margin="0,30"
@@ -132,7 +135,8 @@
                                         HorizontalAlignment="Center"
                                         Background="#048cdd"
                                         BorderBrush="#048cdd"
-                                        Command="{Binding AddCommand}"
+                                        Command="{Binding DataContext.SelectCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
                                         Content="启动"
                                         FontSize="20" />
                                     <Button
@@ -142,7 +146,8 @@
                                         HorizontalAlignment="Center"
                                         Background="#f56c6c"
                                         BorderBrush="#f56c6c"
-                                        Command="{Binding AddCommand}"
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
                                         Content="删除"
                                         FontSize="20" />
                                 </StackPanel>

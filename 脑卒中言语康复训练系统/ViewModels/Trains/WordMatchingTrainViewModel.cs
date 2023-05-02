@@ -534,6 +534,10 @@ namespace 脑卒中言语康复训练系统.ViewModels.Trains
 
                 foreach (var record in CurrTrainRecord.TrainQuestionRecords)
                 {
+                    if (record.EndTime.Equals(new DateTime()))
+                    {
+                        record.EndTime = DateTime.Now;
+                    }
                     sql = "INSERT INTO TrainQuestionRecord(TrainQuestionId,TrainRecordId,Retry,Score,StartTime,EndTime,CreateTime,UpdateTime) VALUES (" +
                     record.TrainQuestionId + "," +
                     trainRecordId + "," +

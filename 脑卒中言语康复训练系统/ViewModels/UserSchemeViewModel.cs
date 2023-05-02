@@ -1,15 +1,20 @@
-﻿using Prism.Commands;
+﻿using DryIoc;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using 脑卒中言语康复训练系统.Common;
+using 脑卒中言语康复训练系统.Common.Tools;
 using 脑卒中言语康复训练系统.Extensions;
 using 脑卒中言语康复训练系统.Models;
 using 脑卒中言语康复训练系统.Shard.Helper;
@@ -17,16 +22,52 @@ using 脑卒中言语康复训练系统.Shard.Models;
 
 namespace 脑卒中言语康复训练系统.ViewModels
 {
-    class UserSchemeViewModel : BindableBase
+    class UserSchemeViewModel : BindableBase, INavigationAware
     {
-        public UserSchemeViewModel(IRegionManager regionManager) {
+        public UserSchemeViewModel(IRegionManager regionManager, IDialogHostService dialogService) {
             this.regionManager = regionManager;
-            CreateData();
+            this.dialogService = dialogService;
 
             SelectCommand = new DelegateCommand<object>(select);
+            DeleteCommand = new DelegateCommand<object>(delete);
+            AddCommand = new DelegateCommand(add);
         }
 
         public DelegateCommand<object> SelectCommand { get; set; }
+        public DelegateCommand<object> DeleteCommand { get; set; }
+        public DelegateCommand AddCommand { get; set; }
+
+        public async void delete(object obj)
+        {
+            var isLogin = await LoginVerification();
+            if (!isLogin)
+            {
+                return;
+            }
+            SchemeLookRaise scheme = obj as SchemeLookRaise;
+            var param = new DialogParameters();
+            param.Add("Title", "温馨提示");
+            param.Add("Message", "是否确认删除["+ scheme.Name +"]?");
+            var res = await dialogService.ShowDialog("MessageBoxView", param);
+            if (res != null && res.Result == ButtonResult.OK)
+            {
+                DeleteSchemeLook(scheme.Id);
+                GetSchemeLooks();
+            }
+        }
+
+        public async void add()
+        {
+            var isLogin = await LoginVerification();
+            if (!isLogin)
+            {
+                return;
+            }
+            var param = new DialogParameters();
+            param.Add("UserId", LoginVerificationTool.GetLoginUserId());
+            await dialogService.ShowDialog("AddSchemeLookView", param);
+            GetSchemeLooks();
+        }
 
         public void select(object obj)
         {
@@ -40,12 +81,13 @@ namespace 脑卒中言语康复训练系统.ViewModels
                 navigationParam.Add("Scheme", schemes);
                 navigationParam.Add("NextTrain", 1);
                 navigationParam.Add("MaxItemIndex", schemes.Projects[0].Quantity);
-                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(SchemeLooks[SelectIdx].Projects[0].Type + "View", navigationParam);
+                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(schemes.Projects[0].Type + "View", navigationParam);
             }
         }
 
         private static SqLiteHelper sqlHelper;
         private readonly IRegionManager regionManager;
+        private readonly IDialogHostService dialogService;
         private ObservableCollection<SchemeLookRaise> schemeLooks;
         private int selectIdx = 0;
 
@@ -62,22 +104,55 @@ namespace 脑卒中言语康复训练系统.ViewModels
             set { schemeLooks = value; RaisePropertyChanged(); }
         }
 
-        private void CreateData()
+        private void GetSchemeLooks()
         {
+            int userId = LoginVerificationTool.GetLoginUserId();
+
             SchemeLooks = new ObservableCollection<SchemeLookRaise>();
-
-            ObservableCollection<SchemeItemRaise> list = new ObservableCollection<SchemeItemRaise>();
-            list.Add(new SchemeItemRaise { Order = 1, Name = "看词选图训练", Type = "WordMatchingTrain", Quantity = 1 });
-            list.Add(new SchemeItemRaise { Order = 1, Name = "看词选图训练", Type = "WordMatchingTrain", Quantity = 2 });
-            list.Add(new SchemeItemRaise { Order = 1, Name = "残缺图片匹配训练", Type = "IncompleteImageMatchingTrain", Quantity = 3 });
-            list.Add(new SchemeItemRaise { Order = 1, Name = "字词发音训练", Type = "WordPronunciationTrain", Quantity = 1 });
-            list.Add(new SchemeItemRaise { Order = 1, Name = "听理解训练", Type = "AuditoryComprehensionTrain", Quantity = 5 });
-            
-
-            SchemeLooks.Add(new SchemeLookRaise { Name = "系统项目", Projects = list });
-            
+            GetConnetion();
+            string sql = "SELECT * FROM SchemeLook WHERE UserId = " + userId;
+            var reader = sqlHelper.ExecuteQuery(sql);
+            while (reader.Read())
+            {
+                var schemelook = new SchemeLookRaise()
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    UpdateTime = reader.GetDateTime(reader.GetOrdinal("UpdateTime")),
+                    CreateTime = reader.GetDateTime(reader.GetOrdinal("CreateTime")),
+                };
+                schemelook.Projects = GetSchemeItems(schemelook);
+                SchemeLooks.Add(schemelook);
+            }
+            reader.Close();
+            sqlHelper.CloseConnection();
         }
 
+        private ObservableCollection<SchemeItemRaise> GetSchemeItems(SchemeLookRaise schemeLook)
+        {
+            var projects = new ObservableCollection<SchemeItemRaise>();
+            GetConnetion();
+            string sql = "SELECT * FROM SchemeItem LEFT JOIN Train ON SchemeItem.TrainId = Train.Id WHERE SchemeLookId = " + schemeLook.Id;
+            var reader = sqlHelper.ExecuteQuery(sql);
+            int order = 1;
+            while (reader.Read())
+            {
+                projects.Add(new SchemeItemRaise()
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Order = order++,
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
+                    Type = reader.GetString(reader.GetOrdinal("Type")),
+                    SchemeLookId = reader.GetInt32(reader.GetOrdinal("SchemeLookId")),
+                    UpdateTime = reader.GetDateTime(reader.GetOrdinal("UpdateTime")),
+                    CreateTime = reader.GetDateTime(reader.GetOrdinal("CreateTime")),
+                });
+            }
+            reader.Close();
+            sqlHelper.CloseConnection();
+            return projects;
+        }
 
         /// <summary>
         /// 获取SQLite Connection
@@ -140,6 +215,49 @@ namespace 脑卒中言语康复训练系统.ViewModels
             reader.Close();
             sqlHelper.CloseConnection();
             return abilities;
+        }
+
+        private void DeleteSchemeLook(int id)
+        {
+            GetConnetion();
+            string sql = "delete from SchemeLook Where id = " + id;
+            sqlHelper.ExecuteQuery(sql);
+            sql = "delete from SchemeItem Where SchemeLookId = " + id;
+            sqlHelper.ExecuteQuery(sql);
+            sqlHelper.CloseConnection();
+        }
+
+        /// <summary>
+        /// 用于判断是否登录了,若未登录,进行拦截
+        /// </summary>
+        /// <returns>登录(true)/未登录(false)</returns>
+        private async Task<bool> LoginVerification()
+        {
+            bool isSuccess = true;
+            if (!LoginVerificationTool.IsLogin())
+            {
+                var parameters = new DialogParameters();
+                parameters.Add("Title", "温馨提示");
+                parameters.Add("Message", "请先登录再进行量表测评!");
+                await dialogService.ShowDialog("MessageBoxView", parameters);
+                isSuccess = false;
+            }
+            return isSuccess;
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            GetSchemeLooks();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
         }
     }
 }

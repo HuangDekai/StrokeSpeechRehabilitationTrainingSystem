@@ -145,7 +145,8 @@
                                         HorizontalAlignment="Center"
                                         Background="#f56c6c"
                                         BorderBrush="#f56c6c"
-                                        Command="{Binding AddCommand}"
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
                                         Content="删除"
                                         FontSize="20" />
                                 </StackPanel>
