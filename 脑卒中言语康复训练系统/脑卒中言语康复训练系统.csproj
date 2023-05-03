@@ -9,19 +9,44 @@
 
   <ItemGroup>
     <None Remove="App.xaml.cs~RF364d6d61.TMP" />
+    <None Remove="Graduate.db" />
+    <None Remove="Image\20230501170300_logo.jpg" />
+    <None Remove="Image\20230501170717_logo.jpg" />
+    <None Remove="Image\20230501171132_logo.jpg" />
+    <None Remove="Image\20230501171211_logo.jpg" />
+    <None Remove="Image\20230501171448_logo.jpg" />
+    <None Remove="Image\20230501171749_logo.jpg" />
+    <None Remove="Image\Avatar\20230428180128.png" />
+    <None Remove="Image\Avatar\20230428181111.png" />
+    <None Remove="Image\Avatar\20230428182344.png" />
+    <None Remove="Image\Avatar\20230428182357.png" />
+    <None Remove="Image\Avatar\20230428182605.png" />
+    <None Remove="Image\Avatar\20230428182609.png" />
+    <None Remove="Image\Avatar\20230428184439.png测试名11" />
+    <None Remove="Image\Avatar\20230428184447.png测试名11" />
+    <None Remove="Image\Avatar\20230428184517.png测试名11" />
+    <None Remove="Image\Avatar\20230428184726_测试名11.png" />
+    <None Remove="Image\Avatar\20230501095316_.jpg" />
+    <None Remove="Image\Avatar\Default.png" />
+    <None Remove="Image\Avatar\品优购快报.png" />
     <None Remove="Image\Default.png" />
     <None Remove="Image\Kato.jpg" />
     <None Remove="Image\剃须刀.jpg" />
     <None Remove="Image\剪刀.jpg" />
     <None Remove="Image\医生.jpg" />
+    <None Remove="Image\床.jpg" />
+    <None Remove="Image\手套.jpg" />
     <None Remove="Image\教师.jpg" />
     <None Remove="Image\水杯.jpg" />
     <None Remove="Image\水杯.webp" />
+    <None Remove="Image\洗衣机.jpg" />
     <None Remove="Image\消防员.jpg" />
     <None Remove="Image\照相机.jpg" />
     <None Remove="Image\牙刷.jpg" />
     <None Remove="Image\牙刷.webp" />
     <None Remove="Image\理发师.jpg" />
+    <None Remove="Image\电吹风.jpg" />
+    <None Remove="Image\眼镜.jpg" />
     <None Remove="Image\筷子.jpg" />
     <None Remove="Image\耳机.jpg" />
     <None Remove="Image\自行车.jpg" />
@@ -33,8 +58,10 @@
     <None Remove="Image\铅笔.webp" />
     <None Remove="Image\键盘.jpg" />
     <None Remove="Image\键盘.webp" />
+    <None Remove="Image\镜子.jpg" />
     <None Remove="Image\闹钟.jpg" />
     <None Remove="Image\雨伞.jpg" />
+    <None Remove="Image\风扇.jpg" />
     <None Remove="Image\飞机.jpg" />
     <None Remove="ViewModels\Dialogs\g50anlks.roy~" />
     <None Remove="ViewModels\Dialogs\UserInfoViewModel.cs~RF5bebdf2.TMP" />
@@ -59,6 +86,90 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Graduate.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501170300_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501170717_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501171132_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501171211_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501171448_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\20230501171749_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428180128.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428181111.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428182344.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428182357.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428182605.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428182609.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428184439.png测试名11">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428184447.png测试名11">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428184517.png测试名11">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230428184726_测试名11.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\20230501095316_.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\Default.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Avatar\品优购快报.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\床.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\手套.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\洗衣机.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\电吹风.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\眼镜.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\镜子.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\风扇.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.701" />
     <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
@@ -80,32 +191,72 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Image\Kato.jpg" />
-    <Resource Include="Image\Default.png" />
-    <Resource Include="Image\剃须刀.jpg" />
-    <Resource Include="Image\剪刀.jpg" />
-    <Resource Include="Image\医生.jpg" />
-    <Resource Include="Image\教师.jpg" />
-    <Resource Include="Image\水杯.jpg" />
-    <Resource Include="Image\消防员.jpg" />
-    <Resource Include="Image\照相机.jpg" />
-    <Resource Include="Image\牙刷.jpg" />
-    <Resource Include="Image\理发师.jpg" />
-    <Resource Include="Image\筷子.jpg" />
-    <Resource Include="Image\耳机.jpg" />
-    <Resource Include="Image\自行车.jpg" />
-    <Resource Include="Image\菜刀.jpg" />
-    <Resource Include="Image\警察.jpg" />
-    <Resource Include="Image\钥匙.jpg" />
-    <Resource Include="Image\铅笔.jpg" />
-    <Resource Include="Image\键盘.jpg" />
-    <Resource Include="Image\闹钟.jpg" />
-    <Resource Include="Image\雨伞.jpg" />
-    <Resource Include="Image\飞机.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Image\Avatar\" />
+    <Content Include="Image\Kato.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\Default.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\剃须刀.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\剪刀.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\医生.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\教师.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\水杯.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\消防员.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\照相机.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\牙刷.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\理发师.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\筷子.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\耳机.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\自行车.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\菜刀.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\警察.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\钥匙.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\铅笔.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\键盘.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\闹钟.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\雨伞.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\飞机.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

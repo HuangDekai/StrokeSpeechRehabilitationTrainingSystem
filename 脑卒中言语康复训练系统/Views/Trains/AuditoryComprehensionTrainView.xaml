@@ -57,100 +57,92 @@
         <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" />
 
         <DockPanel Grid.Row="1">
-            <Canvas>
-                <Border
-                    Canvas.Left="1700"
-                    Canvas.Top="10"
-                    Width="200"
-                    Height="200"
-                    CornerRadius="10">
+            <StackPanel
+                Grid.Column="1"
+                Margin="0,0,50,0"
+                DockPanel.Dock="Right"
+                Visibility="{Binding IsBtnGroupShow, Converter={StaticResource IsShowConverter}}">
+                <Button
+                    Width="150"
+                    Height="40"
+                    Margin="0,25,0,0"
+                    Background="#ff7d24"
+                    BorderBrush="#ff7d24"
+                    Command="{Binding ReplayCommand}"
+                    DockPanel.Dock="Right">
                     <StackPanel
-                        Grid.Column="1"
-                        DockPanel.Dock="Right"
-                        Visibility="{Binding IsBtnGroupShow, Converter={StaticResource IsShowConverter}}">
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Margin="0,25,0,0"
-                            Background="#ff7d24"
-                            BorderBrush="#ff7d24"
-                            Command="{Binding ReplayCommand}"
-                            DockPanel.Dock="Right">
-                            <StackPanel
-                                Width="127"
-                                Height="24"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <materialDesign:PackIcon
-                                    Margin="0,0,10,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Kind="Replay" />
-                                <TextBlock
-                                    Width="95"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="重       播" />
-                            </StackPanel>
-                        </Button>
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Margin="0,25,0,0"
-                            Background="#ff7d24"
-                            BorderBrush="#ff7d24"
-                            Command="{Binding NextCommand}"
-                            DockPanel.Dock="Right"
-                            Visibility="{Binding IsNextShow, Converter={StaticResource IsShowConverter}}">
-                            <StackPanel
-                                Width="127"
-                                Height="24"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <materialDesign:PackIcon
-                                    Margin="0,0,10,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Kind="SkipNextCircleOutline" />
-                                <TextBlock
-                                    Width="95"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="下  一  题" />
-                            </StackPanel>
-                        </Button>
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Margin="0,25,0,0"
-                            Background="#1eca3a"
-                            BorderBrush="#1eca3a"
-                            Command="{Binding CommitCommand}"
-                            DockPanel.Dock="Right"
-                            Visibility="{Binding IsCommitShow, Converter={StaticResource IsShowConverter}}">
-                            <StackPanel
-                                Width="127"
-                                Height="24"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <materialDesign:PackIcon
-                                    Margin="0,2,10,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Kind="BorderColor" />
-                                <TextBlock
-                                    Width="95"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="提       交" />
-                            </StackPanel>
-                        </Button>
+                        Width="127"
+                        Height="24"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Kind="Replay" />
+                        <TextBlock
+                            Width="95"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Text="重       播" />
                     </StackPanel>
-                </Border>
-            </Canvas>
+                </Button>
+                <Button
+                    Width="150"
+                    Height="40"
+                    Margin="0,25,0,0"
+                    Background="#ff7d24"
+                    BorderBrush="#ff7d24"
+                    Command="{Binding NextCommand}"
+                    DockPanel.Dock="Right"
+                    Visibility="{Binding IsNextShow, Converter={StaticResource IsShowConverter}}">
+                    <StackPanel
+                        Width="127"
+                        Height="24"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Kind="SkipNextCircleOutline" />
+                        <TextBlock
+                            Width="95"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Text="下  一  题" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Width="150"
+                    Height="40"
+                    Margin="0,25,0,0"
+                    Background="#1eca3a"
+                    BorderBrush="#1eca3a"
+                    Command="{Binding CommitCommand}"
+                    DockPanel.Dock="Right"
+                    Visibility="{Binding IsCommitShow, Converter={StaticResource IsShowConverter}}">
+                    <StackPanel
+                        Width="127"
+                        Height="24"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="0,2,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Kind="BorderColor" />
+                        <TextBlock
+                            Width="95"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Text="提       交" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -172,6 +164,7 @@
                 </materialDesign:Card>
                 <StackPanel
                     Grid.Row="1"
+                    Margin="200,0,0,0"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
                     <materialDesign:Card

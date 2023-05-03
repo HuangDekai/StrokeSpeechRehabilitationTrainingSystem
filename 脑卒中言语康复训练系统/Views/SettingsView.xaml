@@ -29,41 +29,7 @@
         </DockPanel>
         <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" />
         <DockPanel Grid.Row="1">
-            <Canvas>
-                <Border
-                    Canvas.Left="1700"
-                    Canvas.Top="10"
-                    Width="200"
-                    Height="200"
-                    CornerRadius="10">
-                    <StackPanel Grid.Column="1" DockPanel.Dock="Right">
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Margin="0,25,0,0"
-                            Command="{Binding ToUpdateSystemNameCommand}"
-                            DockPanel.Dock="Right">
-                            <StackPanel
-                                Width="127"
-                                Height="24"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <materialDesign:PackIcon
-                                    Margin="0,0,10,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Kind="Cog" />
-                                <TextBlock
-                                    Width="95"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="设       置" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </Border>
-            </Canvas>
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -90,6 +56,26 @@
                             FontSize="30"
                             Text="{Binding SystemRaise.Name}" />
                     </materialDesign:Card>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="20,50,0,50"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Right">
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Margin="0,0,0,0"
+                            Command="{Binding ToUpdateSystemNameCommand}"
+                            DockPanel.Dock="Right">
+                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Kind="Cog" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
                 <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" />
                 <Grid Grid.Row="1">
